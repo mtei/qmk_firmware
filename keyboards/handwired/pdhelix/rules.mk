@@ -83,6 +83,9 @@ HD44780_ENABLE = no 		# Enable support for HD44780 based LCDs (+400)
 
 MOUSEKEY_ENABLE = no       # Mouse keys(+4700)
 RGBLIGHT_ENABLE = yes        # Enable keyboard RGB underglow
+EXTRAKEY_ENABLE = no       # Audio control and System control(+450)
+CONSOLE_ENABLE = no        # Console for debug(+400)
+COMMAND_ENABLE = no        # Commands for debug and configuration
 
 SPLIT_KEYBOARD = yes
 DEFAULT_FOLDER = handwired/pdhelix/pd0
