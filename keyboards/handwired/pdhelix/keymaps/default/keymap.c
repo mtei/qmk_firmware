@@ -182,16 +182,21 @@ void led_set_user(uint8_t usb_led) {
 
 #ifdef SSD1306OLED
 
-void matrix_master_OLED_init (void) {
+bool use_OLED = 0;
+
+void matrix_init_OLED (void) {
+    use_OLED = 1;
     iota_gfx_init(!has_usb());   // turns on the display
 }
 
 void matrix_scan_user(void) {
-     iota_gfx_task();  // this is what updates the display continuously
+    if( use_OLED )
+        iota_gfx_task();  // this is what updates the display continuously
 }
 
 void matrix_slave_scan_user(void) {
-     iota_gfx_task();  // this is what updates the display continuously
+    if( use_OLED )
+        iota_gfx_task();  // this is what updates the display continuously
 }
 
 void matrix_update(struct CharacterMatrix *dest,

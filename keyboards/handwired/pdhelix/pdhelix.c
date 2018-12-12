@@ -14,19 +14,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "pdhelix.h"
+#include "split_util.h"
+
+#if defined(SSD1306OLED)
+extern void matrix_init_OLED(void);
+
+void matrix_master_OLED_init (void) {
+    //dummy for quantum/split_common/split_util.c:keyboard_master_setup() call
+}
+#endif
 
 void matrix_init_kb(void) {
-	// put your keyboard start-up code here
-	// runs once when the firmware starts up
+    // put your keyboard start-up code here
+    // runs once when the firmware starts up
 
-	matrix_init_user();
+#if defined(SSD1306OLED)
+  #if SOFT_SERIAL_PIN != D0 && SOFT_SERIAL_PIN != D1
+    #ifndef USE_I2C
+    matrix_init_OLED();
+    #else
+    if (has_usb()) {
+       matrix_init_OLED();
+    }
+    #endif
+  #else
+    #error OLED cant init 'SOFT_SERIAL_PIN == D0 || SOFT_SERIAL_PIN == D1'
+  #endif
+#endif
+    matrix_init_user();
 }
 
 void matrix_scan_kb(void) {
-	// put your looping keyboard code here
-	// runs every cycle (a lot)
+    // put your looping keyboard code here
+    // runs every cycle (a lot)
 
-	matrix_scan_user();
+    matrix_scan_user();
 }
 
 bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
