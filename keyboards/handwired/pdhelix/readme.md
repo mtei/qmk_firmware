@@ -1,8 +1,8 @@
-# pdhelix
+# pdhelix (Patched Helix)
 
 ![Patchd Helix PD0](https://i.imgur.com/OvchUjl.jpg)
 
-This is a provisional Helix implementation for the quantum/split_common test
+This is a provisional Helix implementation to test the quantum/split_common code. It is not intended to make Helix implementation correspond to quantum/split_common.
 
 Firmware Maintainer: [mtei](https://github.com/mtei)  
 Hardware Supported: Helix PCB with patch, Pro Micro  

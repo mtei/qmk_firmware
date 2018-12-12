@@ -1,2 +1,3 @@
-# Patched Helix PD2
-![Patchd Helix PD2](https://i.imgur.com/pGUT2II.jpg)
+# Patched Helix PD2 with two OLED
+![Patchd Helix PD2 with two OLED](https://i.imgur.com/NVYyNuf.jpg)
+![Patchd Helix PD2 with two OLED fig](https://i.imgur.com/Ee1WQrs.jpg)
