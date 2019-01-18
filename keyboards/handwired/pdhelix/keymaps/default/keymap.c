@@ -27,8 +27,6 @@ extern rgblight_config_t rgblight_config;
   #include "ssd1306.h"
 #endif
 
-uint8_t is_master = 0 ;
-
 #define KC_RBSCP LT(_RAISE,KC_BSPC)
 #define KC_RENT LT(_RAISE,KC_ENT)
 #define KC_LOWER MO(_LOWER)
@@ -173,9 +171,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 void matrix_init_user(void) {
-    is_master = has_usb();
 }
-
 
 void led_set_user(uint8_t usb_led) {
 }
@@ -186,7 +182,7 @@ bool use_OLED = 0;
 
 void matrix_init_OLED (void) {
     use_OLED = 1;
-    iota_gfx_init(!has_usb());   // turns on the display
+    iota_gfx_init(!isLeftHand);   // turns on the display
 }
 
 void matrix_scan_user(void) {
@@ -289,7 +285,7 @@ void iota_gfx_task_user(void) {
 #endif
 
   matrix_clear(&matrix);
-  if(is_master){
+  if(isLeftHand){
     render_status(&matrix);
   }else{
     render_logo(&matrix);

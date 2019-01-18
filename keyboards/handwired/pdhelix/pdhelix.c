@@ -33,7 +33,7 @@ void matrix_init_kb(void) {
     #ifndef USE_I2C
     matrix_init_OLED();
     #else
-    if (has_usb()) {
+    if (isLeftHand) {
        matrix_init_OLED();
     }
     #endif
