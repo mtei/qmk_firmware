@@ -15,6 +15,9 @@
  */
 #include QMK_KEYBOARD_H
 
+#ifdef CONSOLE_ENABLE
+  #include <print.h>
+#endif
 #include <string.h>
 
 #ifdef RGBLIGHT_ENABLE
@@ -132,6 +135,32 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    )
 };
 
+uint32_t layer_state_set_kb(uint32_t state) {
+#ifdef RGBLIGHT_ENABLE
+    dprintf("state = %u\n", state);
+    switch (biton32(state)) {
+    case _RAISE:
+      rgblight_sethsv_noeeprom_yellow();
+      rgblight_mode_noeeprom(RGBLIGHT_MODE_KNIGHT + 0);
+      break;
+    case _LOWER:
+      rgblight_sethsv_noeeprom_green();
+      rgblight_mode_noeeprom(RGBLIGHT_MODE_KNIGHT + 1);
+      break;
+    case _ADJUST:
+      rgblight_sethsv_noeeprom_red();
+      rgblight_mode_noeeprom(RGBLIGHT_MODE_KNIGHT + 2);
+      break;
+    default:
+      rgblight_sethsv_noeeprom_cyan();
+      rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
+      break;
+    }
+#endif // RGBLIGHT_ENABLE
+
+  return state;
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case EISU:
@@ -214,7 +243,7 @@ static void render_logo(struct CharacterMatrix *matrix) {
 #if defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_ANIMATIONS)
   char buf[30];
   if(rgblight_config.enable) {
-      snprintf(buf, sizeof(buf), " LED %2d: %d,%d,%d ",
+      snprintf(buf, sizeof(buf), " LED %2d:%d,%d,%d ",
                rgblight_config.mode,
                rgblight_config.hue/RGBLIGHT_HUE_STEP,
                rgblight_config.sat/RGBLIGHT_SAT_STEP,
@@ -254,12 +283,15 @@ void render_status(struct CharacterMatrix *matrix) {
   // Define layers here, Have not worked out how to have text displayed for each layer. Copy down the number you see and add a case for it below
   int name_num;
   uint32_t lstate;
-  matrix_write_P(matrix, layer_names[0]);
+  //matrix_write_P(matrix, layer_names[0]);
 #if defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_ANIMATIONS)
   char buf[30];
   if(rgblight_config.enable) {
-      snprintf(buf, sizeof(buf), " LED %2d",
-               rgblight_config.mode);
+      snprintf(buf, sizeof(buf), " LED %2d:%d,%d,%d",
+               rgblight_config.mode,
+               rgblight_config.hue/RGBLIGHT_HUE_STEP,
+               rgblight_config.sat/RGBLIGHT_SAT_STEP,
+               rgblight_config.val/RGBLIGHT_VAL_STEP);
       matrix_write(matrix, buf);
   }
 #endif
