@@ -31,10 +31,8 @@ static void setup_handedness(void) {
 }
 
 static void keyboard_master_setup(void) {
-#ifdef USE_I2C
 #ifdef SSD1306OLED
     matrix_master_OLED_init ();
-#endif
 #endif
 #ifdef USE_MATRIX_I2C
     i2c_master_init();

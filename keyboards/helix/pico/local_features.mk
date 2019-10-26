@@ -73,6 +73,8 @@ ifeq ($(strip $(LED_ANIMATIONS)), yes)
 endif
 
 ifeq ($(strip $(OLED_ENABLE)), yes)
+    SRC += local_drivers/ssd1306.c
+    SRC += local_drivers/i2c.c
     OPT_DEFS += -DOLED_ENABLE
 endif
 

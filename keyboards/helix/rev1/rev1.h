@@ -4,14 +4,6 @@
 
 #include "quantum.h"
 
-#ifdef USE_I2C
-#include <stddef.h>
-#ifdef __AVR__
-  #include <avr/io.h>
-  #include <avr/interrupt.h>
-#endif
-#endif
-
 #if MATRIX_ROWS == 6 // HELIX_ROWS == 3
   #ifndef FLIP_HALF
   // Standard Keymap
