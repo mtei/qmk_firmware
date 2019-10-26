@@ -12,13 +12,14 @@ define HELIX_CUSTOMISE_MSG
   $(info -  LED_UNDERGLOW_ENABLE = $(LED_UNDERGLOW_ENABLE))
   $(info -  LED_ANIMATION        = $(LED_ANIMATIONS))
   $(info -  IOS_DEVICE_ENABLE    = $(IOS_DEVICE_ENABLE))
+  $(info -- AUDIO_ENABLE         = $(AUDIO_ENABLE))
   $(info )
 endef
 
   ifneq ($(strip $(HELIX)),)
     ### Helix keyboard keymap: convenient command line option
     ##    make HELIX=<options> helix/pico:<keymap>
-    ##    option= oled | back | under | no_ani | na | ios | verbose
+    ##    option= oled | back | under | no_ani | na | noaudio | ios | verbose
     ##    ex.
     ##      make HELIX=oled          helix/pico:<keymap>
     ##      make HELIX=oled,back     helix/pico:<keymap>
@@ -26,6 +27,9 @@ endef
     ##      make HELIX=oled,back,na  helix/pico:<keymap>
     ##      make HELIX=oled,back,ios helix/pico:<keymap>
     ##
+    ifeq ($(findstring noaudio,$(HELIX)), noaudio)
+      AUDIO_ENABLE = no
+    endif
     ifeq ($(findstring oled,$(HELIX)), oled)
       OLED_ENABLE = yes
     endif
@@ -65,29 +69,31 @@ else ifeq ($(strip $(LED_UNDERGLOW_ENABLE)), yes)
 endif
 
 ifeq ($(strip $(IOS_DEVICE_ENABLE)), yes)
-    OPT_DEFS += -DIOS_DEVICE_ENABLE
+  OPT_DEFS += -DIOS_DEVICE_ENABLE
 endif
 
 ifeq ($(strip $(LED_ANIMATIONS)), yes)
-    OPT_DEFS += -DLED_ANIMATIONS
+  OPT_DEFS += -DLED_ANIMATIONS
+  ifeq ($(strip $(RGBLIGHT_ENABLE)), yes)
+    AUDIO_ENABLE = no
+  endif
+endif
+
+ifeq ($(strip $(OLED_ENABLE)), old)
+  SRC += local_drivers/ssd1306.c
+  SRC += local_drivers/i2c.c
+  OPT_DEFS += -DOLED_ENABLE
+  ifeq ($(strip $(LOCAL_GLCDFONT)), yes)
+    OPT_DEFS += -DLOCAL_GLCDFONT
+  endif
 endif
 
 ifeq ($(strip $(OLED_ENABLE)), yes)
-    SRC += local_drivers/ssd1306.c
-    SRC += local_drivers/i2c.c
-    OPT_DEFS += -DOLED_ENABLE
-endif
-
-ifeq ($(strip $(LOCAL_GLCDFONT)), yes)
-    OPT_DEFS += -DLOCAL_GLCDFONT
-endif
-
-ifeq ($(strip $(AUDIO_ENABLE)),yes)
-  ifeq ($(strip $(RGBLIGHT_ENABLE)),yes)
-    LINK_TIME_OPTIMIZATION_ENABLE = yes
-  endif
-  ifeq ($(strip $(OLED_ENABLE)),yes)
-    LINK_TIME_OPTIMIZATION_ENABLE = yes
+  OLED_DRIVER_ENABLE = yes
+  ifeq ($(strip $(LOCAL_GLCDFONT)), yes)
+    OPT_DEFS += -DOLED_FONT_H=\<helixfont.h\>
+  else
+    OPT_DEFS += -DOLED_FONT_H=\"common/glcdfont.c\"
   endif
 endif
 
