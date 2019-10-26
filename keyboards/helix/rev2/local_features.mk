@@ -79,14 +79,22 @@ ifeq ($(strip $(LED_ANIMATIONS)), yes)
     OPT_DEFS += -DLED_ANIMATIONS
 endif
 
-ifeq ($(strip $(OLED_ENABLE)), yes)
+ifeq ($(strip $(OLED_ENABLE)), old)
     SRC += local_drivers/ssd1306.c
     SRC += local_drivers/i2c.c
     OPT_DEFS += -DOLED_ENABLE
+    ifeq ($(strip $(LOCAL_GLCDFONT)), yes)
+        OPT_DEFS += -DLOCAL_GLCDFONT
+    endif
 endif
 
-ifeq ($(strip $(LOCAL_GLCDFONT)), yes)
-    OPT_DEFS += -DLOCAL_GLCDFONT
+ifeq ($(strip $(OLED_ENABLE)), yes)
+    OLED_DRIVER_ENABLE = yes
+    ifeq ($(strip $(LOCAL_GLCDFONT)), yes)
+       OPT_DEFS += -DOLED_FONT_H=\<helixfont.h\>
+    else
+       OPT_DEFS += -DOLED_FONT_H=\"common/glcdfont.c\"
+    endif
 endif
 
 ifneq ($(strip $(SHOW_HELIX_OPTIONS)),)
