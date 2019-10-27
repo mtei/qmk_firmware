@@ -1,7 +1,7 @@
 #include QMK_KEYBOARD_H
 #include "split_util.h"
 #include "keymap_xrows.h"
-#ifdef SSD1306OLED
+#if defined(SSD1306OLED) || defined(OLED_DRIVER_ENABLE)
   #include "oled.h"
 #endif
 
