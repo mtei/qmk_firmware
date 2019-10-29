@@ -4,6 +4,11 @@
 
 #include "quantum.h"
 
+#ifndef SPLIT_KEYBOARD
+extern bool is_helix_master(void);
+#define is_keyboard_master() is_helix_master()
+#endif
+
 #if MATRIX_ROWS == 8 // HELIX_ROWS == 4
 #ifndef FLIP_HALF
 // Standard Keymap

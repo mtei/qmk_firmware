@@ -15,6 +15,9 @@
 #endif
 
 volatile bool isLeftHand = true;
+volatile bool is_master = false;
+
+bool is_helix_master(void) { return is_master; }
 
 static void setup_handedness(void) {
   #ifdef EE_HANDS

@@ -7,9 +7,11 @@
 rgblight_config_t rgblight_config;
 #endif
 
-#if KEYBOARD_helix_rev2
-extern uint8_t is_master;
-bool is_keyboard_master(void) { return is_master; }
+#ifdef KEYBOARD_helix_rev2
+#  ifndef SPLIT_KEYBOARD
+     extern bool is_helix_master(void);
+#    define is_keyboard_master() is_helix_master()
+#  endif
 #endif
 
 static void render_logo(void)
