@@ -4,6 +4,11 @@
 
 #include "quantum.h"
 
+#ifndef SPLIT_KEYBOARD
+extern bool is_helix_master(void);
+#define is_keyboard_master() is_helix_master()
+#endif
+
 #ifndef FLIP_HALF
 // Standard Keymap
 // (TRRS jack on the left half is to the right, TRRS jack on the right half is to the left)
