@@ -23,7 +23,7 @@ extern rgblight_config_t rgblight_config;
 #define _DVORAK 2
 #define _LOWER 3
 #define _RAISE 4
-#define _ADJUST 16
+#define _ADJUST 5
 
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,
@@ -443,6 +443,14 @@ void matrix_master_OLED_init (void) {
 void matrix_scan_user(void) {
      iota_gfx_task();  // this is what updates the display continuously
 }
+
+void matrix_update(struct CharacterMatrix *dest,
+                          const struct CharacterMatrix *source) {
+    if (memcmp(dest->display, source->display, sizeof(dest->display))) {
+        memcpy(dest->display, source->display, sizeof(dest->display));
+        dest->dirty = true;
+    }
+}
 #endif
 
 #ifdef AUDIO_ENABLE
@@ -468,4 +476,96 @@ void music_scale_user(void)
     PLAY_SONG(music_scale);
 }
 
+#endif
+
+
+#ifdef SSD1306OLED
+//assign the right code to your layers for OLED display
+#define L_BASE 0
+#define L_LOWER (1<<_LOWER)
+#define L_RAISE (1<<_RAISE)
+#define L_ADJUST (1<<_ADJUST)
+#define L_ADJUST_TRI (L_ADJUST|L_RAISE|L_LOWER)
+
+static void render_status_info(struct CharacterMatrix *matrix) {
+
+#if DEBUG_TO_SCREEN
+  if (debug_enable) {
+    return;
+  }
+#endif
+
+  matrix_clear(matrix);
+  matrix_write_P(matrix, PSTR("USB: "));
+#ifdef PROTOCOL_LUFA
+  switch (USB_DeviceState) {
+    case DEVICE_STATE_Unattached:
+      matrix_write_P(matrix, PSTR("Unattached"));
+      break;
+    case DEVICE_STATE_Suspended:
+      matrix_write_P(matrix, PSTR("Suspended"));
+      break;
+    case DEVICE_STATE_Configured:
+      matrix_write_P(matrix, PSTR("Connected"));
+      break;
+    case DEVICE_STATE_Powered:
+      matrix_write_P(matrix, PSTR("Powered"));
+      break;
+    case DEVICE_STATE_Default:
+      matrix_write_P(matrix, PSTR("Default"));
+      break;
+    case DEVICE_STATE_Addressed:
+      matrix_write_P(matrix, PSTR("Addressed"));
+      break;
+    default:
+      matrix_write_P(matrix, PSTR("Invalid"));
+  }
+#endif
+
+// Define layers here, Have not worked out how to have text displayed for each layer. Copy down the number you see and add a case for it below
+
+  char buf[40];
+  snprintf(buf,sizeof(buf), "Undef-%ld", layer_state);
+  matrix_write_P(matrix, PSTR("\n\nLayer: "));
+    switch (layer_state) {
+        case L_BASE:
+           matrix_write_P(matrix, PSTR("Default"));
+           break;
+        case L_RAISE:
+           matrix_write_P(matrix, PSTR("Raise"));
+           break;
+        case L_LOWER:
+           matrix_write_P(matrix, PSTR("Lower"));
+           break;
+        case L_ADJUST:
+        case L_ADJUST_TRI:
+           matrix_write_P(matrix, PSTR("ADJUST"));
+           break;
+        default:
+           matrix_write(matrix, buf);
+ }
+
+  // Host Keyboard LED Status
+  char led[40];
+    snprintf(led, sizeof(led), "\n%s  %s  %s",
+            (host_keyboard_leds() & (1<<USB_LED_NUM_LOCK)) ? "NUMLOCK" : "       ",
+            (host_keyboard_leds() & (1<<USB_LED_CAPS_LOCK)) ? "CAPS" : "    ",
+            (host_keyboard_leds() & (1<<USB_LED_SCROLL_LOCK)) ? "SCLK" : "    ");
+  matrix_write(matrix, led);
+  matrix_update(&display, matrix);
+}
+
+void iota_gfx_task_user(void) {
+    struct CharacterMatrix matrix;
+
+#if DEBUG_TO_SCREEN
+    if (debug_enable) {
+        return;
+    }
+#endif
+
+    matrix_clear(&matrix);
+    render_status_info(&matrix);
+    matrix_update(&display, &matrix);
+}
 #endif
