@@ -7,9 +7,6 @@
 #ifdef AUDIO_ENABLE
   #include "audio.h"
 #endif
-#ifdef SSD1306OLED
-  #include "ssd1306.h"
-#endif
 #ifdef CONSOLE_ENABLE
   #include <print.h>
 #endif
@@ -440,10 +437,6 @@ void matrix_init_user(void) {
     #ifdef AUDIO_ENABLE
         startup_user();
     #endif
-    #ifdef SSD1306OLED
-        //SSD1306 OLED init, make sure to add #define SSD1306OLED in config.h
-        iota_gfx_init(!has_usb());   // turns on the display
-    #endif
 }
 
 
@@ -473,10 +466,8 @@ void music_scale_user(void)
 #endif
 
 
-//SSD1306 OLED update loop, make sure to add #define SSD1306OLED in config.h
-#if defined(SSD1306OLED) || defined(OLED_DRIVER_ENABLE)
+#ifdef OLED_DRIVER_ENABLE
 
-#if defined(OLED_DRIVER_ENABLE)
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
   if (is_master) {
     return OLED_ROTATION_0;
@@ -484,24 +475,6 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     return OLED_ROTATION_180;
   }
 }
-#else
-#define oled_write(data,flag)    matrix_write(matrix, data)
-#define oled_write_P(data,flag)  matrix_write_P(matrix, data)
-#endif
-
-#ifdef SSD1306OLED
-void matrix_scan_user(void) {
-     iota_gfx_task();  // this is what updates the display continuously
-}
-
-void matrix_update(struct CharacterMatrix *dest,
-                          const struct CharacterMatrix *source) {
-  if (memcmp(dest->display, source->display, sizeof(dest->display))) {
-    memcpy(dest->display, source->display, sizeof(dest->display));
-    dest->dirty = true;
-  }
-}
-#endif
 
 static const char Qwerty_name[]  PROGMEM = " Qwerty";
 static const char Colemak_name[] PROGMEM = " Colemak";
@@ -530,11 +503,7 @@ static const char *layer_names[] = {
     [_ADJUST] = Adjust_name
 };
 
-#ifdef SSD1306OLED
-void render_layer_status(struct CharacterMatrix *matrix) {
-#else
 void render_layer_status(void) {
-#endif
   int name_num;
   uint32_t lstate;
   for( lstate = layer_state, name_num = 0;
@@ -548,11 +517,7 @@ void render_layer_status(void) {
   }
 }
 
-#ifdef SSD1306OLED
-static void render_logo(struct CharacterMatrix *matrix) {
-#else
 static void render_logo(void) {
-#endif
 
   static const char logo[] PROGMEM ={
     0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x89,0x8a,0x8b,0x8c,0x8d,0x8e,0x8f,0x90,0x91,0x92,0x93,0x94,
@@ -572,28 +537,16 @@ static void render_logo(void) {
                rgblight_config.val/RGBLIGHT_VAL_STEP);
       oled_write(buf, false);
   } else {
-#  ifdef SSD1306OLED
-      render_layer_status(matrix);
-#  else
       render_layer_status();
       oled_write_P(PSTR("\n"), false);
-#  endif
   }
 #else // ! defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_ANIMATIONS)
-#  ifdef SSD1306OLED
-  render_layer_status(matrix);
-#  else
   render_layer_status();
   oled_write_P(PSTR("\n"), false);
-#  endif
 #endif
 }
 
-#ifdef SSD1306OLED
-void render_status(struct CharacterMatrix *matrix) {
-#else
 void render_status(void) {
-#endif
 
   // Render to mode icon
   static const char os_logo[][2][3] PROGMEM ={{{0x95,0x96,0},{0xb5,0xb6,0}},{{0x97,0x98,0},{0xb7,0xb8,0}}};
@@ -609,11 +562,7 @@ void render_status(void) {
 
   oled_write_P(layer_names[current_default_layer], false);
   oled_write_P(PSTR("\n"), false);
-#ifdef SSD1306OLED
-  render_layer_status(matrix);
-#else
   render_layer_status();
-#endif
   // Host Keyboard LED Status
   oled_write_P(PSTR("\n"), false);
   oled_write_P((host_keyboard_leds() & (1<<USB_LED_NUM_LOCK)) ? PSTR("NUMLOCK") : PSTR("       "), false);
@@ -621,26 +570,6 @@ void render_status(void) {
   oled_write_P((host_keyboard_leds() & (1<<USB_LED_SCROLL_LOCK)) ? PSTR("SCLK") : PSTR("    "), false);
 }
 
-
-#ifdef SSD1306OLED
-void iota_gfx_task_user(void) {
-  struct CharacterMatrix matrix;
-
-#if DEBUG_TO_SCREEN
-  if (debug_enable) {
-    return;
-  }
-#endif
-
-  matrix_clear(&matrix);
-  if(is_master){
-    render_status(&matrix);
-  }else{
-    render_logo(&matrix);
-  }
-  matrix_update(&display, &matrix);
-}
-#else
 void oled_task_user(void) {
 
 #if DEBUG_TO_SCREEN
@@ -655,6 +584,5 @@ void oled_task_user(void) {
     render_logo();
   }
 }
-#endif
 
 #endif

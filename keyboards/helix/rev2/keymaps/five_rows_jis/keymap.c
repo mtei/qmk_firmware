@@ -5,9 +5,6 @@
 #include "lufa.h"
 #include "split_util.h"
 #endif
-#ifdef SSD1306OLED
-  #include "ssd1306.h"
-#endif
 
 // * If you want to recognize that you pressed the Adjust key with the Lower / Raise key you can enable this comment out. However, the binary size may be over. *
 // #define ADJUST_MACRO_ENABLE
@@ -209,7 +206,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #error "undefined keymaps"
 #endif
 
-#if defined(SSD1306OLED) || defined(OLED_DRIVER_ENABLE)
+#ifdef OLED_DRIVER_ENABLE
 
 char keylog[24] = {};
 const char code_to_name[60] = {
@@ -267,7 +264,7 @@ void update_tri_layer_RGB(uint8_t layer1, uint8_t layer2, uint8_t layer3) {
 #endif
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  #if defined(SSD1306OLED) || defined(OLED_DRIVER_ENABLE)
+  #ifdef OLED_DRIVER_ENABLE
     if (record->event.pressed) {
       set_keylog(keycode, record);
     }
@@ -328,16 +325,10 @@ void matrix_init_user(void) {
   #ifdef RGBLIGHT_ENABLE
     RGB_current_mode = rgblight_config.mode;
   #endif
-  //SSD1306 OLED init, make sure to add #define SSD1306OLED in config.h
-  #ifdef SSD1306OLED
-    iota_gfx_init(!has_usb()); // turns on the display
-  #endif
 }
 
-//SSD1306 OLED update loop, make sure to add #define SSD1306OLED in config.h
-#if defined(SSD1306OLED) || defined(OLED_DRIVER_ENABLE)
+#ifdef OLED_DRIVER_ENABLE
 
-#if defined(OLED_DRIVER_ENABLE)
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
   if (is_master) {
     return OLED_ROTATION_0;
@@ -345,24 +336,6 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     return OLED_ROTATION_180;
   }
 }
-#else
-#define oled_write(data,flag)    matrix_write(matrix, data)
-#define oled_write_P(data,flag)  matrix_write_P(matrix, data)
-#endif
-
-#ifdef SSD1306OLED
-void matrix_scan_user(void) {
-  iota_gfx_task();  // this is what updates the display continuously
-}
-
-static inline void matrix_update(struct CharacterMatrix *dest,
-                          const struct CharacterMatrix *source) {
-  if (memcmp(dest->display, source->display, sizeof(dest->display))) {
-    memcpy(dest->display, source->display, sizeof(dest->display));
-    dest->dirty = true;
-  }
-}
-#endif
 
 //assign the right code to your layers for OLED display
 #define L_BASE _BASE
@@ -380,23 +353,13 @@ const char helix_logo[]={
   0xc0,0xc1,0xc2,0xc3,0xc4,0xc5,0xc6,0xc7,0xc8,0xc9,0xca,0xcb,0xcc,0xcd,0xce,0xcf,0xd0,0xd1,0xd2,0xd3,0xd4,
   0};
 
-#ifdef SSD1306OLED
-static inline void render_logo(struct CharacterMatrix *matrix) {
-#else
 static inline void render_logo(void) {
-#endif
-
     oled_write(helix_logo, false);
 }
 
 const char mac_win_logo[][2][3]={{{0x95,0x96,0},{0xb5,0xb6,0}},{{0x97,0x98,0},{0xb7,0xb8,0}}};
 
-#ifdef SSD1306OLED
-static inline void render_status(struct CharacterMatrix *matrix) {
-#else
 static inline void render_status(void) {
-#endif
-
   char buf[20];
   // Render to mode icon
   if(keymap_config.swap_lalt_lgui==false){
@@ -445,26 +408,6 @@ static inline void render_status(void) {
   oled_write(keylog, false);
 }
 
-#ifdef SSD1306OLED
-void iota_gfx_task_user(void) {
-  struct CharacterMatrix matrix;
-
-  #if DEBUG_TO_SCREEN
-    if (debug_enable) {
-      return;
-    }
-  #endif
-
-  matrix_clear(&matrix);
-  if (is_master) {
-    render_status(&matrix);
-  } else {
-    render_logo(&matrix);
-  }
-
-  matrix_update(&display, &matrix);
-}
-#else
 void oled_task_user(void) {
 
   #if DEBUG_TO_SCREEN
@@ -479,6 +422,5 @@ void oled_task_user(void) {
     render_logo();
   }
 }
-#endif
 
 #endif

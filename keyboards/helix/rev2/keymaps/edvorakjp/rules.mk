@@ -33,6 +33,6 @@ ifeq ($(strip $(LED_UNDERGLOW_ENABLE)), yes)
   OPT_DEFS += -DRGBLED_BACK
 endif
 
-ifneq ($(strip $(OLED_ENABLE)), no)
+ifeq ($(strip $(OLED_ENABLE)), yes)
   SRC += oled.c
 endif

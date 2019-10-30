@@ -7,9 +7,6 @@
 #ifdef AUDIO_ENABLE
   #include "audio.h"
 #endif
-#ifdef SSD1306OLED
-  #include "ssd1306.h"
-#endif
 
 extern keymap_config_t keymap_config;
 
@@ -449,10 +446,6 @@ void matrix_init_user(void) {
     #ifdef RGBLIGHT_ENABLE
       RGB_current_mode = rgblight_config.mode;
     #endif
-    #ifdef SSD1306OLED
-        //SSD1306 OLED init, make sure to add #define SSD1306OLED in config.h
-        iota_gfx_init(!has_usb());   // turns on the display
-    #endif
 }
 
 
@@ -554,9 +547,6 @@ uint8_t layer_state_old;
 
 //runs every scan cycle (a lot)
 void matrix_scan_user(void) {
-  #ifdef SSD1306OLED
-    iota_gfx_task();  // this is what updates the display continuously
-  #endif
 
   if(delay_key_stat && (timer_elapsed(key_timer) > DELAY_TIME)){
     register_delay_code(_BASE);
@@ -628,10 +618,8 @@ void matrix_scan_user(void) {
   #endif
 }
 
-//SSD1306 OLED update loop, make sure to add #define SSD1306OLED in config.h
-#if defined(SSD1306OLED) || defined(OLED_DRIVER_ENABLE)
+#ifdef OLED_DRIVER_ENABLE
 
-#if defined(OLED_DRIVER_ENABLE)
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
   if (is_master) {
     return OLED_ROTATION_0;
@@ -639,27 +627,9 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     return OLED_ROTATION_180;
   }
 }
-#else
-#define oled_write(data,flag)    matrix_write(matrix, data)
-#define oled_write_P(data,flag)  matrix_write_P(matrix, data)
-#endif
-
-#ifdef SSD1306OLED
-void matrix_update(struct CharacterMatrix *dest,
-                          const struct CharacterMatrix *source) {
-  if (memcmp(dest->display, source->display, sizeof(dest->display))) {
-    memcpy(dest->display, source->display, sizeof(dest->display));
-    dest->dirty = true;
-  }
-}
-#endif
 
 // Render to OLED
-#ifdef SSD1306OLED
-void render_status(struct CharacterMatrix *matrix) {
-#else
 void render_status(void) {
-#endif
 
   // froggy logo
   static char logo[4][1][17]=
@@ -742,23 +712,6 @@ void render_status(void) {
 
 }
 
-#ifdef SSD1306OLED
-void iota_gfx_task_user(void) {
-  struct CharacterMatrix matrix;
-
-#if DEBUG_TO_SCREEN
-  if (debug_enable) {
-    return;
-  }
-#endif
-
-  matrix_clear(&matrix);
-  if(is_master){
-    render_status(&matrix);
-  }
-  matrix_update(&display, &matrix);
-}
-#else
 void oled_task_user(void) {
 
 #if DEBUG_TO_SCREEN
@@ -771,6 +724,5 @@ void oled_task_user(void) {
     render_status();
   }
 }
-#endif
 
 #endif
