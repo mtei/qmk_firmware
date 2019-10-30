@@ -2,7 +2,6 @@
 #include <string.h>
 #include "oled.h"
 
-#if defined(OLED_DRIVER_ENABLE)
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
   if (is_master) {
     return OLED_ROTATION_0;
@@ -10,16 +9,8 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     return OLED_ROTATION_180;
   }
 }
-#else
-#define oled_write(data,flag)    matrix_write(matrix, data)
-#define oled_write_P(data,flag)  matrix_write_P(matrix, data)
-#endif
 
-#ifdef SSD1306OLED
-static void render_logo(struct CharacterMatrix *matrix) {
-#else
 static void render_logo(void) {
-#endif
 
   static char logo[] = {
     0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x89,0x8a,0x8b,0x8c,0x8d,0x8e,0x8f,0x90,0x91,0x92,0x93,0x94,
@@ -29,21 +20,7 @@ static void render_logo(void) {
   oled_write(logo, false);
 }
 
-#ifdef SSD1306OLED
-void matrix_update(struct CharacterMatrix *dest,
-                   const struct CharacterMatrix *source) {
-  if (memcmp(dest->display, source->display, sizeof(dest->display))) {
-    memcpy(dest->display, source->display, sizeof(dest->display));
-    dest->dirty = true;
-  }
-}
-#endif
-
-#ifdef SSD1306OLED
-void render_status(struct CharacterMatrix *matrix) {
-#else
 void render_status(void) {
-#endif
 
   // Render to mode icon
   static char logo[][2][3] = {{{0x95,0x96,0},{0xb5,0xb6,0}},{{0x97,0x98,0},{0xb7,0xb8,0}}};
@@ -79,23 +56,6 @@ void render_status(void) {
   oled_write(led, false);
 }
 
-#ifdef SSD1306OLED
-void iota_gfx_task_user(void) {
-  struct CharacterMatrix matrix;
-
-#if DEBUG_TO_SCREEN
-  if (debug_enable) { return; }
-#endif
-
-  matrix_clear(&matrix);
-  if (is_master) {
-    render_status(&matrix);
-  } else {
-    render_logo(&matrix);
-  }
-  matrix_update(&display, &matrix);
-}
-#else
 void oled_task_user(void) {
 
 #if DEBUG_TO_SCREEN
@@ -110,4 +70,3 @@ void oled_task_user(void) {
     render_logo();
   }
 }
-#endif

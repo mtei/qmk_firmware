@@ -7,9 +7,6 @@
 #ifdef AUDIO_ENABLE
   #include "audio.h"
 #endif
-#ifdef SSD1306OLED
-  #include "ssd1306.h"
-#endif
 
 extern keymap_config_t keymap_config;
 
@@ -470,10 +467,6 @@ void matrix_init_user(void) {
     #ifdef RGBLIGHT_ENABLE
       RGB_current_mode = rgblight_config.mode;
     #endif
-    #ifdef SSD1306OLED
-        //SSD1306 OLED init, make sure to add #define SSD1306OLED in config.h
-        iota_gfx_init(!has_usb());   // turns on the display
-    #endif
 }
 
 
@@ -503,10 +496,8 @@ void music_scale_user(void)
 #endif
 
 
-//SSD1306 OLED update loop, make sure to add #define SSD1306OLED in config.h
-#if defined(SSD1306OLED) || defined(OLED_DRIVER_ENABLE)
+#ifdef OLED_DRIVER_ENABLE
 
-#if defined(OLED_DRIVER_ENABLE)
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
   if (is_master) {
     return OLED_ROTATION_0;
@@ -514,24 +505,7 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     return OLED_ROTATION_180;
   }
 }
-#else
-#define oled_write(data,flag)    matrix_write(matrix, data)
-#define oled_write_P(data,flag)  matrix_write_P(matrix, data)
-#endif
 
-#ifdef SSD1306OLED
-void matrix_scan_user(void) {
-     iota_gfx_task();  // this is what updates the display continuously
-}
-
-void matrix_update(struct CharacterMatrix *dest,
-                          const struct CharacterMatrix *source) {
-  if (memcmp(dest->display, source->display, sizeof(dest->display))) {
-    memcpy(dest->display, source->display, sizeof(dest->display));
-    dest->dirty = true;
-  }
-}
-#endif
 
 //assign the right code to your layers for OLED display
 #define L_BASE 0
@@ -540,11 +514,7 @@ void matrix_update(struct CharacterMatrix *dest,
 #define L_ADJUST (1<<_ADJUST)
 #define L_ADJUST_TRI (L_ADJUST|L_RAISE|L_LOWER)
 
-#ifdef SSD1306OLED
-static void render_logo(struct CharacterMatrix *matrix) {
-#else
 static void render_logo(void) {
-#endif
 
   static char logo[]={
     0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x89,0x8a,0x8b,0x8c,0x8d,0x8e,0x8f,0x90,0x91,0x92,0x93,0x94,
@@ -554,13 +524,7 @@ static void render_logo(void) {
   oled_write(logo, false);
 }
 
-
-
-#ifdef SSD1306OLED
-void render_status(struct CharacterMatrix *matrix) {
-#else
 void render_status(void) {
-#endif
 
   // Render to mode icon
   static char logo[][2][3]={{{0x95,0x96,0},{0xb5,0xb6,0}},{{0x97,0x98,0},{0xb7,0xb8,0}}};
@@ -606,26 +570,6 @@ void render_status(void) {
 }
 
 
-#ifdef SSD1306OLED
-void iota_gfx_task_user(void) {
-  struct CharacterMatrix matrix;
-
-#if DEBUG_TO_SCREEN
-  if (debug_enable) {
-    return;
-  }
-#endif
-
-  matrix_clear(&matrix);
-  if(is_master){
-    render_status(&matrix);
-  }else{
-    render_logo(&matrix);
-  }
-  matrix_update(&display, &matrix);
-}
-
-#else
 void oled_task_user(void) {
 
 #if DEBUG_TO_SCREEN
@@ -640,6 +584,5 @@ void oled_task_user(void) {
     render_logo();
   }
 }
-#endif
 
 #endif
