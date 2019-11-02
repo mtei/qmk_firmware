@@ -522,23 +522,10 @@ static void render_logo(void) {
   oled_write_P(helix_logo, false);
 }
 
-void render_status(void) {
-
-  // Render to mode icon
-  static const char os_logo[][2][3] PROGMEM ={{{0x95,0x96,0},{0xb5,0xb6,0}},{{0x97,0x98,0},{0xb7,0xb8,0}}};
-  if(keymap_config.swap_lalt_lgui==false){
-    oled_write_P(os_logo[0][0], false);
-    oled_write_P(PSTR("\n"), false);
-    oled_write_P(os_logo[0][1], false);
-  }else{
-    oled_write_P(os_logo[1][0], false);
-    oled_write_P(PSTR("\n"), false);
-    oled_write_P(os_logo[1][1], false);
-  }
-
+static void render_layer_status(void) {
   // Define layers here, Have not worked out how to have text displayed for each layer. Copy down the number you see and add a case for it below
   char buf[10];
-  oled_write_P(PSTR("\nLayer: "), false);
+  oled_write_P(PSTR("Layer: "), false);
     switch (layer_state) {
         case L_BASE:
            oled_write_P(PSTR("Default"), false);
@@ -558,9 +545,27 @@ void render_status(void) {
            snprintf(buf,sizeof(buf), "%ld", layer_state);
            oled_write(buf, false);
     }
+}
+
+void render_status(void) {
+
+  // Render to mode icon
+  static const char os_logo[][2][3] PROGMEM ={{{0x95,0x96,0},{0xb5,0xb6,0}},{{0x97,0x98,0},{0xb7,0xb8,0}}};
+  if(keymap_config.swap_lalt_lgui==false){
+    oled_write_P(os_logo[0][0], false);
+    oled_write_P(PSTR("\n"), false);
+    oled_write_P(os_logo[0][1], false);
+  }else{
+    oled_write_P(os_logo[1][0], false);
+    oled_write_P(PSTR("\n"), false);
+    oled_write_P(os_logo[1][1], false);
+  }
+
+  oled_write_P(PSTR("\n"), false);
+  render_layer_status();
+  oled_write_P(PSTR("\n"), false);
 
   // Host Keyboard LED Status
-  oled_write_P(PSTR("\n"), false);
   oled_write_P((host_keyboard_leds() & (1<<USB_LED_NUM_LOCK)) ?
                PSTR("NUMLOCK") : PSTR("       "), false);
   oled_write_P((host_keyboard_leds() & (1<<USB_LED_CAPS_LOCK)) ?
@@ -582,6 +587,7 @@ void oled_task_user(void) {
     render_status();
   } else {
     render_logo();
+    render_layer_status();
   }
 }
 
