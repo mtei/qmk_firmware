@@ -10,12 +10,8 @@ OPT_DEFS += -DOLED_FONT_H=\"common/glcdfont.c\"
 # Xulkal specific oled define
 OPT_DEFS += -DOLED_90ROTATION
 
+## select helix local matrix.c or split_common/matrix.c
+include $(strip $(SELECT_MATRIX_C_MK))
 ifneq ($(strip $(SPLIT_KEYBOARD)), yes)
-  CUSTOM_MATRIX = yes  # use Helix old code
-
-  LIB_SRC += local_drivers/serial.c
-  KEYBOARD_PATHS += $(HELIX_TOP_DIR)/local_drivers
-  SRC += rev2/matrix.c
-  SRC += rev2/split_util.c
-  SRC += rev2/split_scomm.c
+  LIB_SRC += local_drivers/serial.c # workarund for LINK_TIME_OPTIMIZATION_ENABLE=yes problem
 endif

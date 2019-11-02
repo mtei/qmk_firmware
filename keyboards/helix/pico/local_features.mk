@@ -53,15 +53,8 @@ endef
     SHOW_HELIX_OPTIONS = yes
   endif
 
-ifneq ($(strip $(SPLIT_KEYBOARD)), yes)
-  SRC += local_drivers/serial.c
-  KEYBOARD_PATHS += $(HELIX_TOP_DIR)/local_drivers
-
-  CUSTOM_MATRIX = yes
-
-  SRC += pico/matrix.c
-  SRC += pico/split_util.c
-endif
+## select local matrix.c or split_common/matrix.c
+include $(strip $(SELECT_MATRIX_C_MK))
 
 ########
 # convert Helix-specific options (that represent combinations of standard options)
