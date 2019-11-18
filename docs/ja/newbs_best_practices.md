@@ -24,7 +24,7 @@ QMK に貢献するプロセスを順を追って説明し、この作業を簡�
 <!-- 2. You've [set up your build environment](newbs_getting_started.md?id=environment-setup). -->
 <!-- #7231:da7d49246: 2. You've set up both [your build environment](newbs_getting_started.md?id=set-up-your-environment) and [QMK](newbs_getting_started.md?id=set-up-qmk). -->
 
-1. あなたは GitHub アカウントがあり、アカウントに [qmk_firmware リポジトリをフォーク](../getting_started_github.md) している。
+1. あなたは GitHub アカウントがあり、アカウントに [qmk_firmware リポジトリをフォーク](getting_started_github.md) している。
 2. あなたは、[環境構築](newbs_getting_started.md#set-up-your-environment) と [QMK の設定](newbs_getting_started.md#set-up-qmk) を両方とも完了している。
 
 <!-- ## Your fork's master: Update Often, Commit Never -->
