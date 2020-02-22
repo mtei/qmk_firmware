@@ -616,10 +616,15 @@ void rgblight_sethsv_master(uint8_t hue, uint8_t sat, uint8_t val) { rgblight_se
 void rgblight_sethsv_slave(uint8_t hue, uint8_t sat, uint8_t val) { rgblight_sethsv_range(hue, sat, val, (uint8_t)RGBLED_NUM / 2, (uint8_t)RGBLED_NUM); }
 #endif  // ifndef RGBLIGHT_SPLIT
 
+__attribute__((weak))
+void rgblight_call_driver(LED_TYPE *start_led, uint8_t num_leds) {
+    ws2812_setleds(start_led, num_leds);
+}
+
 #ifndef RGBLIGHT_CUSTOM_DRIVER
 void rgblight_set(void) {
     LED_TYPE *start_led;
-    uint16_t  num_leds = clipping_num_leds;
+    uint8_t  num_leds = clipping_num_leds;
 
     if (!rgblight_config.enable) {
         for (uint8_t i = effect_start_pos; i < effect_end_pos; i++) {
@@ -647,7 +652,7 @@ void rgblight_set(void) {
         convert_rgb_to_rgbw(&start_led[i]);
     }
 #    endif
-    ws2812_setleds(start_led, num_leds);
+    rgblight_call_driver(start_led, num_leds);
 }
 #endif
 
