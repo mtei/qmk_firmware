@@ -29,7 +29,3 @@ ifneq ($(strip $(HELIX)),)
     CONSOLE_ENABLE = yes
   endif
 endif
-
-# convert Helix-specific options (that represent combinations of standard options)
-#   into QMK standard options.
-include $(strip $(KEYBOARD_LOCAL_FEATURES_MK))

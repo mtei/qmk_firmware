@@ -19,7 +19,3 @@ LED_ANIMATIONS = yes        # LED animations
 # IOS_DEVICE_ENABLE = no      # connect to IOS device (iPad,iPhone)
 
 SRC += led_test_init.c
-
-# convert Helix-specific options (that represent combinations of standard options)
-#   into QMK standard options.
-include $(strip $(KEYBOARD_LOCAL_FEATURES_MK))

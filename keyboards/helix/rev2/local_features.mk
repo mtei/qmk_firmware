@@ -5,6 +5,8 @@
 #   combinations of standard options) into QMK standard options.
 #
 
+KEYBOARD_LOCAL_FEATURES_MK :=
+
 define HELIX_CUSTOMISE_MSG
   $(info Helix Spacific Build Options)
   $(info -  OLED_ENABLE          = $(OLED_ENABLE))
