@@ -33,3 +33,4 @@ SLEEP_LED_ENABLE = no    # Breathing sleep LED during USB suspend
 
 SPLIT_KEYBOARD = yes
 ENCODER_ENABLE = yes
+$(info ==== this is $(lastword $(MAKEFILE_LIST)))

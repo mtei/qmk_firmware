@@ -61,3 +61,5 @@ endif
 ifeq ($(strip $(PROTOCOL)), VUSB)
     NKRO_ENABLE       = no
 endif
+$(info ==== this is $(lastword $(MAKEFILE_LIST)))
+$(info )

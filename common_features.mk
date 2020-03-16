@@ -13,6 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+$(info ==== this is $(lastword $(MAKEFILE_LIST)))
+
 SERIAL_DIR := $(QUANTUM_DIR)/serial_link
 SERIAL_PATH := $(QUANTUM_PATH)/serial_link
 SERIAL_SRC := $(wildcard $(SERIAL_PATH)/protocol/*.c)

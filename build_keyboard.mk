@@ -4,6 +4,7 @@
 # responsible for determining which folder is being used and doing the
 # corresponding environment setup.
 
+$(info == start build_keyboard.mk ====)
 ifndef VERBOSE
 .SILENT:
 endif
@@ -420,4 +421,7 @@ check-size: build
 objs-size: build
 
 include show_options.mk
+$(info == end build_keyboard.mk ====)
+
+$(info == include $(TMK_PATH)/rules.mk)
 include $(TMK_PATH)/rules.mk

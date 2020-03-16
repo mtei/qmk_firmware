@@ -16,3 +16,6 @@ RGBLIGHT_TWINKLE  = no
 RGBLIGHT_STARTUP_ANIMATION = no
 
 BOOTLOADER        = qmk-dfu
+$(info )
+$(info ==== this is $(lastword $(MAKEFILE_LIST)))
+$(info )
