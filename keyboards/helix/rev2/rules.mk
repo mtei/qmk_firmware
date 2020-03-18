@@ -8,3 +8,10 @@ LED_BACK_ENABLE = no        # LED backlight (Enable WS2812 RGB underlight.)
 LED_UNDERGLOW_ENABLE = no   # LED underglow (Enable WS2812 RGB underlight.)
 LED_ANIMATIONS = yes        # LED animations
 IOS_DEVICE_ENABLE = no      # connect to IOS device (iPad,iPhone)
+
+$(info ==== this is $(lastword $(MAKEFILE_LIST)))
+#$(info .  KEYBOARD_PATH_1=$(KEYBOARD_PATH_1))
+#$(info .  KEYBOARD_PATH_2=$(KEYBOARD_PATH_2))
+#$(info .  KEYBOARD_PATH_3=$(KEYBOARD_PATH_3))
+#$(info .  KEYBOARD_PATH_4=$(KEYBOARD_PATH_4))
+#$(info .  KEYBOARD_PATH_5=$(KEYBOARD_PATH_5))

@@ -18,6 +18,9 @@ LINK_TIME_OPTIMIZATION_ENABLE = no  # if firmware size over limit, try this opti
 # LED_ANIMATIONS = yes        # LED animations
 # IOS_DEVICE_ENABLE = no      # connect to IOS device (iPad,iPhone)
 
+$(info )
+$(info ==== this is $(lastword $(MAKEFILE_LIST)))
+$(info )
 # convert Helix-specific options (that represent combinations of standard options)
 #   into QMK standard options.
 include $(strip $(KEYBOARD_LOCAL_FEATURES_MK))
