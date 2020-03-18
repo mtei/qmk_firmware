@@ -101,6 +101,7 @@ MAIN_KEYMAP_PATH_5 := $(KEYBOARD_PATH_5)/keymaps/$(KEYMAP)
 # Check for keymap.json first, so we can regenerate keymap.c
 include build_json.mk
 
+# Pull in keymap level rules.mk
 ifeq ("$(wildcard $(KEYMAP_PATH))", "")
     # Look through the possible keymap folders until we find a matching keymap.c
     ifneq ("$(wildcard $(MAIN_KEYMAP_PATH_5)/keymap.c)","")
@@ -315,11 +316,13 @@ ifeq ("$(USER_NAME)","")
 endif
 USER_PATH := users/$(USER_NAME)
 
+# Pull in user level rules.mk
 -include $(USER_PATH)/rules.mk
 ifneq ("$(wildcard $(USER_PATH)/config.h)","")
     CONFIG_H += $(USER_PATH)/config.h
 endif
 
+# Pull in keyboard_features.mk files from all our subfolders
 ifneq ("$(wildcard $(KEYBOARD_PATH_1)/keyboard_features.mk)","")
     include $(KEYBOARD_PATH_1)/keyboard_features.mk
 endif
