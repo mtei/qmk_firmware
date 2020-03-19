@@ -1,5 +1,11 @@
 # QMK ドキュメントを異なる言語に翻訳する方法
 
+<!---
+  grep --no-filename "^[ ]*git diff" docs/ja/*.md | sh
+  original document: 0.8.56:docs/translating.md
+  git diff 0.8.56 HEAD -- docs/translating.md | cat
+-->
+
 ルートフォルダ (`docs/`) にある全てのファイルは英語でなければなりません - 他の全ての言語は、ISO 639-1 言語コードと、それに続く`-`と適切な国コードのサブフォルダにある必要があります。[一般的なもののリストはここで見つかります](https://www.andiamo.co.uk/resources/iso-language-codes/)。このフォルダが存在しない場合、作成することができます。翻訳された各ファイルは英語バージョンと同じ名前でなければなりません。そうすれば正常に元の状態に戻すことができます。
 
 `_summary.md`ファイルはこのフォルダの中に存在し、各ファイルへのリンクのリスト、翻訳された名前、言語フォルダに続くリンクが含まれている必要があります。
