@@ -21,7 +21,7 @@ Please keep these things in mind:
   * https://opensource.com/life/16/10/how-ask-technical-questions
   * http://www.catb.org/esr/faqs/smart-questions.html
 
-# Project Overview
+# Project Overview :id=project-overview
 
 QMK is largely written in C, with specific features and parts written in C++. It targets embedded processors found in keyboards, particularly AVR ([LUFA](http://www.fourwalledcubicle.com/LUFA.php)) and ARM ([ChibiOS](http://www.chibios.com)). If you are already well versed in Arduino programming you'll find a lot of the concepts and limitations familiar. Prior experience with Arduino is not required to successfully contribute to QMK.
 
@@ -52,14 +52,14 @@ Never made an open source contribution before? Wondering how contributions work 
 14. Make changes to the pull request if the reviewing maintainer recommends them.
 15. Celebrate your success after your pull request is merged!
 
-# Coding Conventions
+# Coding Conventions :id=coding-conventions
 
 Most of our style is pretty easy to pick up on. If you are familiar with either C or Python you should not have too much trouble with our local styles.
 
 * [Coding Conventions - C](coding_conventions_c.md)
 * [Coding Conventions - Python](coding_conventions_python.md)
 
-# General Guidelines
+# General Guidelines :id=general-guidelines
 
 We have a few different types of changes in QMK, each requiring a different level of rigor. We'd like you to keep the following guidelines in mind no matter what type of change you're making.
 
@@ -163,6 +163,6 @@ We also ask that you follow these guidelines:
 
 To maintain a clear vision of how things are laid out in QMK we try to plan out refactors in-depth and have a collaborator make the changes. If you have an idea for refactoring, or suggestions, [open an issue](https://github.com/qmk/qmk_firmware/issues), we'd love to talk about how QMK can be improved.
 
-# What Does the Code of Conduct Mean for Me?
+# What Does the Code of Conduct Mean for Me? :id=what-does-the-code-of-conduct-mean-for-me
 
 Our [Code of Conduct](https://github.com/qmk/qmk_firmware/blob/master/CODE_OF_CONDUCT.md) means that you are responsible for treating everyone on the project with respect and courtesy regardless of their identity. If you are the victim of any inappropriate behavior or comments as described in our Code of Conduct, we are here for you and will do the best to ensure that the abuser is reprimanded appropriately, per our code.

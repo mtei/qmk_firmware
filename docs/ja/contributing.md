@@ -1,8 +1,8 @@
 # 貢献方法
 
 <!---
-  original document: d47809575:docs/contributing.md
-  git diff d47809575 HEAD -- docs/contributing.md | cat
+  original document: 0.8.56:docs/contributing.md
+  git diff 0.8.56 HEAD -- docs/contributing.md | cat
 -->
 
 👍🎉 まず、これを読み貢献する時間を作ってくれてありがとうございます！🎉👍
@@ -106,7 +106,7 @@ enum my_keycodes {
 };
 ```
 
-### ドキュメントのプレビュー
+### ドキュメントのプレビュー :id=previewing-the-documentation
 
 開発環境をセットアップした場合は、プルリクエストを開く前に以下のコマンドを `qmk_firmware/` フォルダから実行することで、あなたの変更をプレビューすることができます:
 
