@@ -89,17 +89,45 @@ static void init_pins(void) {
     }
 }
 
+#ifdef DEBUG_MATRIX_PIN
+#define DEBUG_MATRIX_PIN_ON   do { setPinOutput(DEBUG_MATRIX_PIN); writePinHigh(DEBUG_MATRIX_PIN); } while(0)
+#define DEBUG_MATRIX_PIN_OFF  writePinLow(DEBUG_MATRIX_PIN)
+#else
+#define DEBUG_MATRIX_PIN_ON
+#define DEBUG_MATRIX_PIN_OFF
+#endif
+
+#ifdef DEBUG_FULL_MATRIX
+#define DEBUG_FULL_MATRIX_PIN_ON  DEBUG_MATRIX_PIN_ON
+#define DEBUG_FULL_MATRIX_PIN_OFF DEBUG_MATRIX_PIN_OFF
+#else
+#define DEBUG_FULL_MATRIX_PIN_ON
+#define DEBUG_FULL_MATRIX_PIN_OFF
+#endif
+
 static bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row) {
     // Start with a clear matrix row
+    DEBUG_FULL_MATRIX_PIN_ON;
     matrix_row_t current_row_value = 0;
+    wait_us(1); //debug
+    DEBUG_FULL_MATRIX_PIN_OFF;
 
     // Select row and wait for row selecton to stabilize
+    DEBUG_FULL_MATRIX_PIN_ON;
     select_row(current_row);
+    DEBUG_FULL_MATRIX_PIN_OFF;
+
+#ifndef NEW_DELAY_POSITION
+    DEBUG_MATRIX_PIN_ON;
     matrix_io_delay();
+    DEBUG_MATRIX_PIN_OFF;
+#endif
 
     // For each col...
     for (uint8_t col_index = 0; col_index < MATRIX_COLS; col_index++) {
         // Select the col pin to read (active low)
+        DEBUG_FULL_MATRIX_PIN_ON;
+        DEBUG_FULL_MATRIX_PIN_OFF;
         uint8_t pin_state = readPin(col_pins[col_index]);
 
         // Populate the matrix row with the state of the col pin
@@ -107,13 +135,27 @@ static bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row)
     }
 
     // Unselect row
+    DEBUG_FULL_MATRIX_PIN_ON;
     unselect_row(current_row);
+    DEBUG_FULL_MATRIX_PIN_OFF;
+
+#ifdef NEW_DELAY_POSITION
+    if( current_row + 1 < MATRIX_ROWS ) {
+        DEBUG_MATRIX_PIN_ON;
+        matrix_io_delay();
+        DEBUG_MATRIX_PIN_OFF;
+    }
+#endif
 
     // If the row has changed, store the row and return the changed flag.
     if (current_matrix[current_row] != current_row_value) {
         current_matrix[current_row] = current_row_value;
+        DEBUG_FULL_MATRIX_PIN_ON;
+        DEBUG_FULL_MATRIX_PIN_OFF;
         return true;
     }
+    DEBUG_FULL_MATRIX_PIN_ON;
+    DEBUG_FULL_MATRIX_PIN_OFF;
     return false;
 }
 
