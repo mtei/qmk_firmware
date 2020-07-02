@@ -112,15 +112,15 @@ static void init_pins(void) {
 static bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row) {
     // Start with a clear matrix row
     DEBUG_MATRIX_PIN_INIT;
-    DEBUG_FULL_MATRIX_PIN_ON;
+    //DEBUG_FULL_MATRIX_PIN_ON;
     matrix_row_t current_row_value = 0;
-    DEBUG_FULL_WAIT;
-    DEBUG_FULL_MATRIX_PIN_OFF;
+    //DEBUG_FULL_WAIT;
+    //DEBUG_FULL_MATRIX_PIN_OFF;
 
     // Select row and wait for row selecton to stabilize
-    DEBUG_FULL_MATRIX_PIN_ON;
+    //DEBUG_FULL_MATRIX_PIN_ON;
     select_row(current_row);
-    DEBUG_FULL_MATRIX_PIN_OFF;
+    //DEBUG_FULL_MATRIX_PIN_OFF;
 
 #ifndef NEW_DELAY_POSITION
     DEBUG_MATRIX_PIN_ON;
@@ -140,9 +140,9 @@ static bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row)
     }
 
     // Unselect row
-    DEBUG_FULL_MATRIX_PIN_ON;
+    //DEBUG_FULL_MATRIX_PIN_ON;
     unselect_row(current_row);
-    DEBUG_FULL_MATRIX_PIN_OFF;
+    //DEBUG_FULL_MATRIX_PIN_OFF;
 
 #ifdef NEW_DELAY_POSITION
     if( current_row + 1 < MATRIX_ROWS ) {
@@ -155,12 +155,12 @@ static bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row)
     // If the row has changed, store the row and return the changed flag.
     if (current_matrix[current_row] != current_row_value) {
         current_matrix[current_row] = current_row_value;
-        DEBUG_FULL_MATRIX_PIN_ON;
-        DEBUG_FULL_MATRIX_PIN_OFF;
+        //        DEBUG_FULL_MATRIX_PIN_ON;
+        //        DEBUG_FULL_MATRIX_PIN_OFF;
         return true;
     }
-    DEBUG_FULL_MATRIX_PIN_ON;
-    DEBUG_FULL_MATRIX_PIN_OFF;
+    //    DEBUG_FULL_MATRIX_PIN_ON;
+    //    DEBUG_FULL_MATRIX_PIN_OFF;
     return false;
 }
 
