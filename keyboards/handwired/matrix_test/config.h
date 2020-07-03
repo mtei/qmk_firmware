@@ -31,8 +31,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MATRIX_ROWS 5
 #define MATRIX_COLS 6
 #define DEBUG_MATRIX_PIN B5
-#define MATRIX_IO_DELAY 10
-#define DEBUG_FULL_MATRIX
+#define MATRIX_IO_DELAY 0
+//#define DEBUG_FULL_MATRIX
 //#define NEW_DELAY_POSITION
 
 /*
