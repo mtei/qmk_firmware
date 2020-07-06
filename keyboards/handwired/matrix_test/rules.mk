@@ -31,7 +31,21 @@ AUDIO_ENABLE = no           # Audio output
 FAUXCLICKY_ENABLE = no      # Use buzzer to emulate clicky switches
 HD44780_ENABLE = no         # Enable support for HD44780 based LCDs
 
+
+ifeq ($(strip $(EXT)),off)
+  $(info ......)
+  $(info EXT=off)
+  $(info ......)
+  MOUSEKEY_ENABLE = off       # Mouse keys
+  EXTRAKEY_ENABLE = off       # Audio control and System control
+  CONSOLE_ENABLE = off        # Console for debug
+  COMMAND_ENABLE = off        # Commands for debug and configuration
+endif
+
 ifneq ($(strip $(NEW)),)
+  $(info ......)
+  $(info NEW matrix.c)
+  $(info ......)
  CUSTOM_MATRIX = lite
  SRC += matrix.c
 endif
