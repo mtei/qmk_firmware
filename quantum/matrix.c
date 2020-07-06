@@ -93,25 +93,28 @@ static void init_pins(void) {
 #define DEBUG_MATRIX_PIN_INIT setPinOutput(DEBUG_MATRIX_PIN)
 #define DEBUG_MATRIX_PIN_ON   writePinHigh(DEBUG_MATRIX_PIN)
 #define DEBUG_MATRIX_PIN_OFF  writePinLow(DEBUG_MATRIX_PIN)
+#define DEBUG_MATRIX_PIN_TOG  PINx_ADDRESS(pin) & _BV((DEBUG_MATRIX_PIN)&0xF)
 #else
 #define DEBUG_MATRIX_PIN_INIT
 #define DEBUG_MATRIX_PIN_ON
 #define DEBUG_MATRIX_PIN_OFF
+#define DEBUG_MATRIX_PIN_TOG
 #endif
 
 #ifdef DEBUG_FULL_MATRIX
 #define DEBUG_FULL_MATRIX_PIN_ON  DEBUG_MATRIX_PIN_ON
 #define DEBUG_FULL_MATRIX_PIN_OFF DEBUG_MATRIX_PIN_OFF
+#define DEBUG_FULL_MATRIX_PIN_TOG DEBUG_MATRIX_PIN_TOG
 #define DEBUG_FULL_WAIT asm("nop");
 #else
 #define DEBUG_FULL_MATRIX_PIN_ON
 #define DEBUG_FULL_MATRIX_PIN_OFF
+#define DEBUG_FULL_MATRIX_PIN_TOG
 #define DEBUG_FULL_WAIT
 #endif
 
 static bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row) {
     // Start with a clear matrix row
-    DEBUG_MATRIX_PIN_INIT;
     //DEBUG_FULL_MATRIX_PIN_ON;
     matrix_row_t current_row_value = 0;
     //DEBUG_FULL_WAIT;
@@ -123,9 +126,9 @@ static bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row)
     //DEBUG_FULL_MATRIX_PIN_OFF;
 
 #ifndef NEW_DELAY_POSITION
-    DEBUG_MATRIX_PIN_ON;
+    //DEBUG_MATRIX_PIN_ON;
     matrix_io_delay();
-    DEBUG_MATRIX_PIN_OFF;
+    //DEBUG_MATRIX_PIN_OFF;
 #endif
 
     // For each col...
@@ -146,9 +149,9 @@ static bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row)
 
 #ifdef NEW_DELAY_POSITION
     if( current_row + 1 < MATRIX_ROWS ) {
-        DEBUG_MATRIX_PIN_ON;
+        //DEBUG_MATRIX_PIN_ON;
         matrix_io_delay();
-        DEBUG_MATRIX_PIN_OFF;
+        //DEBUG_MATRIX_PIN_OFF;
     }
 #endif
 
@@ -245,7 +248,9 @@ void matrix_init(void) {
 
 uint8_t matrix_scan(void) {
     bool changed = false;
+    DEBUG_MATRIX_PIN_INIT;
 
+    DEBUG_MATRIX_PIN_ON;
 #if defined(DIRECT_PINS) || (DIODE_DIRECTION == COL2ROW)
     // Set row, read cols
     for (uint8_t current_row = 0; current_row < MATRIX_ROWS; current_row++) {
@@ -257,7 +262,7 @@ uint8_t matrix_scan(void) {
         changed |= read_rows_on_col(raw_matrix, current_col);
     }
 #endif
-
+    DEBUG_MATRIX_PIN_OFF;
     debounce(raw_matrix, matrix, MATRIX_ROWS, changed);
 
     matrix_scan_quantum();
