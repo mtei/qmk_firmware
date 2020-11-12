@@ -26,7 +26,7 @@ static inline void wait_cpuclock(int n) {
      * That way, compiler optimization will remove unnecessary code. */
     if (n < 1 ) { return; }
     if (n > 8) {
-        int n4 = (n - 4)/4;
+        int n4 = (n - 3)/4;
         n = n - n4*4 - 4;
         aligned_4clock_delay(n4);
     }
