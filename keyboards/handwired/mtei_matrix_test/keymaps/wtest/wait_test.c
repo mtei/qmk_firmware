@@ -2,7 +2,10 @@
 #include "wait.h"
 //#define LONG_TEST
 //#define TEST_4CLOCK
-#define TEST_16CLOCK
+//#define TEST_16CLOCK
+//#define ALIGN_TEST
+
+/* clang-format off */
 
 extern void aligned_4clock_delay(unsigned int n);
 extern void aligned_16clock_delay(unsigned int n);
@@ -19,6 +22,10 @@ extern void aligned_16clock_delay(unsigned int n);
 #define WAIT_NUM_BASE 0
 #define WAIT_NUM_LOOP 10
 #define TEST_INTERVAL 5000
+#elif defined(ALIGN_TEST)
+#define WAIT_NUM_BASE 0
+#define WAIT_NUM_LOOP 9
+#define TEST_INTERVAL 1000
 #else
 #define WAIT_NUM_BASE 0
 #define WAIT_NUM_LOOP 32
@@ -30,200 +37,172 @@ void keyboard_post_init_user() {
     writePinLow(WAIT_TSET_PIN);
 }
 
-#define PinHi() writePinHigh(WAIT_TSET_PIN)
-#define PinLow() writePinLow(WAIT_TSET_PIN)
+#define Pin_H() writePinHigh(WAIT_TSET_PIN)
+#define Pin_L() writePinLow(WAIT_TSET_PIN)
 #define attr_aligned16 __attribute__ ((aligned(16),noinline))
 
-attr_aligned16 void wait4_test_1(void)   { PinHi(); aligned_4clock_delay(1); PinLow(); }
-attr_aligned16 void wait4_test_2(void)   { PinHi(); aligned_4clock_delay(2); PinLow(); }
-attr_aligned16 void wait4_test_3(void)   { PinHi(); aligned_4clock_delay(3); PinLow(); }
-attr_aligned16 void wait4_test_4(void)   { PinHi(); aligned_4clock_delay(4); PinLow(); }
-attr_aligned16 void wait4_test_5(void)   { PinHi(); aligned_4clock_delay(5); PinLow(); }
-attr_aligned16 void wait4_test_6(void)   { PinHi(); aligned_4clock_delay(6); PinLow(); }
-attr_aligned16 void wait4_test_7(void)   { PinHi(); aligned_4clock_delay(7); PinLow(); }
-attr_aligned16 void wait4_test_8(void)   { PinHi(); aligned_4clock_delay(8); PinLow(); }
-attr_aligned16 void wait4_test_9(void)   { PinHi(); aligned_4clock_delay(9); PinLow(); }
-attr_aligned16 void wait4_test_10(void)  { PinHi(); aligned_4clock_delay(10); PinLow(); }
+attr_aligned16 void wait4_test_1(void)   { Pin_H(); aligned_4clock_delay(1); Pin_L(); }
+attr_aligned16 void wait4_test_2(void)   { Pin_H(); aligned_4clock_delay(2); Pin_L(); }
+attr_aligned16 void wait4_test_3(void)   { Pin_H(); aligned_4clock_delay(3); Pin_L(); }
+attr_aligned16 void wait4_test_4(void)   { Pin_H(); aligned_4clock_delay(4); Pin_L(); }
+attr_aligned16 void wait4_test_5(void)   { Pin_H(); aligned_4clock_delay(5); Pin_L(); }
+attr_aligned16 void wait4_test_6(void)   { Pin_H(); aligned_4clock_delay(6); Pin_L(); }
+attr_aligned16 void wait4_test_7(void)   { Pin_H(); aligned_4clock_delay(7); Pin_L(); }
+attr_aligned16 void wait4_test_8(void)   { Pin_H(); aligned_4clock_delay(8); Pin_L(); }
+attr_aligned16 void wait4_test_9(void)   { Pin_H(); aligned_4clock_delay(9); Pin_L(); }
+attr_aligned16 void wait4_test_10(void)  { Pin_H(); aligned_4clock_delay(10); Pin_L(); }
 
-attr_aligned16 void wait16_test_1(void)   { PinHi(); aligned_16clock_delay(1); PinLow(); }
-attr_aligned16 void wait16_test_2(void)   { PinHi(); aligned_16clock_delay(2); PinLow(); }
-attr_aligned16 void wait16_test_3(void)   { PinHi(); aligned_16clock_delay(3); PinLow(); }
-attr_aligned16 void wait16_test_4(void)   { PinHi(); aligned_16clock_delay(4); PinLow(); }
-attr_aligned16 void wait16_test_5(void)   { PinHi(); aligned_16clock_delay(5); PinLow(); }
-attr_aligned16 void wait16_test_6(void)   { PinHi(); aligned_16clock_delay(6); PinLow(); }
-attr_aligned16 void wait16_test_7(void)   { PinHi(); aligned_16clock_delay(7); PinLow(); }
-attr_aligned16 void wait16_test_8(void)   { PinHi(); aligned_16clock_delay(8); PinLow(); }
-attr_aligned16 void wait16_test_9(void)   { PinHi(); aligned_16clock_delay(9); PinLow(); }
-attr_aligned16 void wait16_test_10(void)  { PinHi(); aligned_16clock_delay(10); PinLow(); }
+attr_aligned16 void wait16_test_1(void)   { Pin_H(); aligned_16clock_delay(1); Pin_L(); }
+attr_aligned16 void wait16_test_2(void)   { Pin_H(); aligned_16clock_delay(2); Pin_L(); }
+attr_aligned16 void wait16_test_3(void)   { Pin_H(); aligned_16clock_delay(3); Pin_L(); }
+attr_aligned16 void wait16_test_4(void)   { Pin_H(); aligned_16clock_delay(4); Pin_L(); }
+attr_aligned16 void wait16_test_5(void)   { Pin_H(); aligned_16clock_delay(5); Pin_L(); }
+attr_aligned16 void wait16_test_6(void)   { Pin_H(); aligned_16clock_delay(6); Pin_L(); }
+attr_aligned16 void wait16_test_7(void)   { Pin_H(); aligned_16clock_delay(7); Pin_L(); }
+attr_aligned16 void wait16_test_8(void)   { Pin_H(); aligned_16clock_delay(8); Pin_L(); }
+attr_aligned16 void wait16_test_9(void)   { Pin_H(); aligned_16clock_delay(9); Pin_L(); }
+attr_aligned16 void wait16_test_10(void)  { Pin_H(); aligned_16clock_delay(10); Pin_L(); }
 
-attr_aligned16 void wait_test_0(void)  { PinHi(); wait_cpuclock(0); PinLow(); }
-attr_aligned16 void wait_test_1(void)  { PinHi(); wait_cpuclock(1); PinLow(); }
-attr_aligned16 void wait_test_2(void)  { PinHi(); wait_cpuclock(2); PinLow(); }
-attr_aligned16 void wait_test_3(void)  { PinHi(); wait_cpuclock(3); PinLow(); }
-attr_aligned16 void wait_test_4(void)  { PinHi(); wait_cpuclock(4); PinLow(); }
-attr_aligned16 void wait_test_5(void)  { PinHi(); wait_cpuclock(5); PinLow(); }
-attr_aligned16 void wait_test_6(void)  { PinHi(); wait_cpuclock(6); PinLow(); }
-attr_aligned16 void wait_test_7(void)  { PinHi(); wait_cpuclock(7); PinLow(); }
-attr_aligned16 void wait_test_8(void)  { PinHi(); wait_cpuclock(8); PinLow(); }
-attr_aligned16 void wait_test_9(void)  { PinHi(); wait_cpuclock(9); PinLow(); }
-attr_aligned16 void wait_test_10(void) { PinHi(); wait_cpuclock(10); PinLow(); }
-attr_aligned16 void wait_test_11(void) { PinHi(); wait_cpuclock(11); PinLow(); }
-attr_aligned16 void wait_test_12(void) { PinHi(); wait_cpuclock(12); PinLow(); }
-attr_aligned16 void wait_test_13(void) { PinHi(); wait_cpuclock(13); PinLow(); }
-attr_aligned16 void wait_test_14(void) { PinHi(); wait_cpuclock(14); PinLow(); }
-attr_aligned16 void wait_test_15(void) { PinHi(); wait_cpuclock(15); PinLow(); }
-attr_aligned16 void wait_test_16(void) { PinHi(); wait_cpuclock(16); PinLow(); }
-attr_aligned16 void wait_test_17(void) { PinHi(); wait_cpuclock(17); PinLow(); }
-attr_aligned16 void wait_test_18(void) { PinHi(); wait_cpuclock(18); PinLow(); }
-attr_aligned16 void wait_test_19(void) { PinHi(); wait_cpuclock(19); PinLow(); }
-attr_aligned16 void wait_test_20(void) { PinHi(); wait_cpuclock(20); PinLow(); }
-attr_aligned16 void wait_test_21(void) { PinHi(); wait_cpuclock(21); PinLow(); }
-attr_aligned16 void wait_test_22(void) { PinHi(); wait_cpuclock(22); PinLow(); }
-attr_aligned16 void wait_test_23(void) { PinHi(); wait_cpuclock(23); PinLow(); }
-attr_aligned16 void wait_test_24(void) { PinHi(); wait_cpuclock(24); PinLow(); }
-attr_aligned16 void wait_test_25(void) { PinHi(); wait_cpuclock(25); PinLow(); }
-attr_aligned16 void wait_test_26(void) { PinHi(); wait_cpuclock(26); PinLow(); }
-attr_aligned16 void wait_test_27(void) { PinHi(); wait_cpuclock(27); PinLow(); }
-attr_aligned16 void wait_test_28(void) { PinHi(); wait_cpuclock(28); PinLow(); }
-attr_aligned16 void wait_test_29(void) { PinHi(); wait_cpuclock(29); PinLow(); }
-attr_aligned16 void wait_test_30(void) { PinHi(); wait_cpuclock(30); PinLow(); }
-attr_aligned16 void wait_test_31(void) { PinHi(); wait_cpuclock(31); PinLow(); }
-attr_aligned16 void wait_test_32(void) { PinHi(); wait_cpuclock(32); PinLow(); }
-attr_aligned16 void wait_test_33(void) { PinHi(); wait_cpuclock(33); PinLow(); }
-attr_aligned16 void wait_test_34(void) { PinHi(); wait_cpuclock(34); PinLow(); }
-attr_aligned16 void wait_test_35(void) { PinHi(); wait_cpuclock(35); PinLow(); }
-attr_aligned16 void wait_test_36(void) { PinHi(); wait_cpuclock(36); PinLow(); }
-attr_aligned16 void wait_test_37(void) { PinHi(); wait_cpuclock(37); PinLow(); }
-attr_aligned16 void wait_test_38(void) { PinHi(); wait_cpuclock(38); PinLow(); }
-attr_aligned16 void wait_test_39(void) { PinHi(); wait_cpuclock(39); PinLow(); }
-attr_aligned16 void wait_test_40(void) { PinHi(); wait_cpuclock(40); PinLow(); }
-attr_aligned16 void wait_test_41(void) { PinHi(); wait_cpuclock(41); PinLow(); }
-attr_aligned16 void wait_test_42(void) { PinHi(); wait_cpuclock(42); PinLow(); }
-attr_aligned16 void wait_test_43(void) { PinHi(); wait_cpuclock(43); PinLow(); }
-attr_aligned16 void wait_test_44(void) { PinHi(); wait_cpuclock(44); PinLow(); }
-attr_aligned16 void wait_test_45(void) { PinHi(); wait_cpuclock(45); PinLow(); }
-attr_aligned16 void wait_test_46(void) { PinHi(); wait_cpuclock(46); PinLow(); }
-attr_aligned16 void wait_test_47(void) { PinHi(); wait_cpuclock(47); PinLow(); }
-attr_aligned16 void wait_test_48(void) { PinHi(); wait_cpuclock(48); PinLow(); }
-attr_aligned16 void wait_test_49(void) { PinHi(); wait_cpuclock(49); PinLow(); }
-attr_aligned16 void wait_test_50(void) { PinHi(); wait_cpuclock(50); PinLow(); }
+attr_aligned16 void wait_test_0(void)  { Pin_H(); wait_cpuclock(0); Pin_L(); }
+attr_aligned16 void wait_test_1(void)  { Pin_H(); wait_cpuclock(1); Pin_L(); }
+attr_aligned16 void wait_test_2(void)  { Pin_H(); wait_cpuclock(2); Pin_L(); }
+attr_aligned16 void wait_test_3(void)  { Pin_H(); wait_cpuclock(3); Pin_L(); }
+attr_aligned16 void wait_test_4(void)  { Pin_H(); wait_cpuclock(4); Pin_L(); }
+attr_aligned16 void wait_test_5(void)  { Pin_H(); wait_cpuclock(5); Pin_L(); }
+attr_aligned16 void wait_test_6(void)  { Pin_H(); wait_cpuclock(6); Pin_L(); }
+attr_aligned16 void wait_test_7(void)  { Pin_H(); wait_cpuclock(7); Pin_L(); }
+attr_aligned16 void wait_test_8(void)  { Pin_H(); wait_cpuclock(8); Pin_L(); }
+attr_aligned16 void wait_test_9(void)  { Pin_H(); wait_cpuclock(9); Pin_L(); }
+attr_aligned16 void wait_test_10(void) { Pin_H(); wait_cpuclock(10); Pin_L(); }
+attr_aligned16 void wait_test_11(void) { Pin_H(); wait_cpuclock(11); Pin_L(); }
+attr_aligned16 void wait_test_12(void) { Pin_H(); wait_cpuclock(12); Pin_L(); }
+attr_aligned16 void wait_test_13(void) { Pin_H(); wait_cpuclock(13); Pin_L(); }
+attr_aligned16 void wait_test_14(void) { Pin_H(); wait_cpuclock(14); Pin_L(); }
+attr_aligned16 void wait_test_15(void) { Pin_H(); wait_cpuclock(15); Pin_L(); }
+attr_aligned16 void wait_test_16(void) { Pin_H(); wait_cpuclock(16); Pin_L(); }
+attr_aligned16 void wait_test_17(void) { Pin_H(); wait_cpuclock(17); Pin_L(); }
+attr_aligned16 void wait_test_18(void) { Pin_H(); wait_cpuclock(18); Pin_L(); }
+attr_aligned16 void wait_test_19(void) { Pin_H(); wait_cpuclock(19); Pin_L(); }
+attr_aligned16 void wait_test_20(void) { Pin_H(); wait_cpuclock(20); Pin_L(); }
+attr_aligned16 void wait_test_21(void) { Pin_H(); wait_cpuclock(21); Pin_L(); }
+attr_aligned16 void wait_test_22(void) { Pin_H(); wait_cpuclock(22); Pin_L(); }
+attr_aligned16 void wait_test_23(void) { Pin_H(); wait_cpuclock(23); Pin_L(); }
+attr_aligned16 void wait_test_24(void) { Pin_H(); wait_cpuclock(24); Pin_L(); }
+attr_aligned16 void wait_test_25(void) { Pin_H(); wait_cpuclock(25); Pin_L(); }
+attr_aligned16 void wait_test_26(void) { Pin_H(); wait_cpuclock(26); Pin_L(); }
+attr_aligned16 void wait_test_27(void) { Pin_H(); wait_cpuclock(27); Pin_L(); }
+attr_aligned16 void wait_test_28(void) { Pin_H(); wait_cpuclock(28); Pin_L(); }
+attr_aligned16 void wait_test_29(void) { Pin_H(); wait_cpuclock(29); Pin_L(); }
+attr_aligned16 void wait_test_30(void) { Pin_H(); wait_cpuclock(30); Pin_L(); }
+attr_aligned16 void wait_test_31(void) { Pin_H(); wait_cpuclock(31); Pin_L(); }
+attr_aligned16 void wait_test_32(void) { Pin_H(); wait_cpuclock(32); Pin_L(); }
+attr_aligned16 void wait_test_33(void) { Pin_H(); wait_cpuclock(33); Pin_L(); }
+attr_aligned16 void wait_test_34(void) { Pin_H(); wait_cpuclock(34); Pin_L(); }
+attr_aligned16 void wait_test_35(void) { Pin_H(); wait_cpuclock(35); Pin_L(); }
+attr_aligned16 void wait_test_36(void) { Pin_H(); wait_cpuclock(36); Pin_L(); }
+attr_aligned16 void wait_test_37(void) { Pin_H(); wait_cpuclock(37); Pin_L(); }
+attr_aligned16 void wait_test_38(void) { Pin_H(); wait_cpuclock(38); Pin_L(); }
+attr_aligned16 void wait_test_39(void) { Pin_H(); wait_cpuclock(39); Pin_L(); }
+attr_aligned16 void wait_test_40(void) { Pin_H(); wait_cpuclock(40); Pin_L(); }
+attr_aligned16 void wait_test_41(void) { Pin_H(); wait_cpuclock(41); Pin_L(); }
+attr_aligned16 void wait_test_42(void) { Pin_H(); wait_cpuclock(42); Pin_L(); }
+attr_aligned16 void wait_test_43(void) { Pin_H(); wait_cpuclock(43); Pin_L(); }
+attr_aligned16 void wait_test_44(void) { Pin_H(); wait_cpuclock(44); Pin_L(); }
+attr_aligned16 void wait_test_45(void) { Pin_H(); wait_cpuclock(45); Pin_L(); }
+attr_aligned16 void wait_test_46(void) { Pin_H(); wait_cpuclock(46); Pin_L(); }
+attr_aligned16 void wait_test_47(void) { Pin_H(); wait_cpuclock(47); Pin_L(); }
+attr_aligned16 void wait_test_48(void) { Pin_H(); wait_cpuclock(48); Pin_L(); }
+attr_aligned16 void wait_test_49(void) { Pin_H(); wait_cpuclock(49); Pin_L(); }
+attr_aligned16 void wait_test_50(void) { Pin_H(); wait_cpuclock(50); Pin_L(); }
 
 
-attr_aligned16 void wait_test_12_a1(void) { wait_cpuclock(1); PinHi(); wait_cpuclock(12); PinLow(); }
-attr_aligned16 void wait_test_12_a2(void) { wait_cpuclock(2); PinHi(); wait_cpuclock(12); PinLow(); }
-attr_aligned16 void wait_test_12_a3(void) { wait_cpuclock(3); PinHi(); wait_cpuclock(12); PinLow(); }
-attr_aligned16 void wait_test_12_a4(void) { wait_cpuclock(4); PinHi(); wait_cpuclock(12); PinLow(); }
-attr_aligned16 void wait_test_12_a5(void) { wait_cpuclock(5); PinHi(); wait_cpuclock(12); PinLow(); }
-attr_aligned16 void wait_test_12_a6(void) { wait_cpuclock(6); PinHi(); wait_cpuclock(12); PinLow(); }
-attr_aligned16 void wait_test_12_a7(void) { wait_cpuclock(7); PinHi(); wait_cpuclock(12); PinLow(); }
+attr_aligned16 void wait_test_12_a1(void) { wait_cpuclock(1); Pin_H(); wait_cpuclock(12); Pin_L(); }
+attr_aligned16 void wait_test_12_a2(void) { wait_cpuclock(2); Pin_H(); wait_cpuclock(12); Pin_L(); }
+attr_aligned16 void wait_test_12_a3(void) { wait_cpuclock(3); Pin_H(); wait_cpuclock(12); Pin_L(); }
+attr_aligned16 void wait_test_12_a4(void) { wait_cpuclock(4); Pin_H(); wait_cpuclock(12); Pin_L(); }
+attr_aligned16 void wait_test_12_a5(void) { wait_cpuclock(5); Pin_H(); wait_cpuclock(12); Pin_L(); }
+attr_aligned16 void wait_test_12_a6(void) { wait_cpuclock(6); Pin_H(); wait_cpuclock(12); Pin_L(); }
+attr_aligned16 void wait_test_12_a7(void) { wait_cpuclock(7); Pin_H(); wait_cpuclock(12); Pin_L(); }
 
-attr_aligned16 void wait_test_64(void) { PinHi(); wait_cpuclock(64); PinLow(); }
-attr_aligned16 void wait_test_65(void) { PinHi(); wait_cpuclock(65); PinLow(); }
+attr_aligned16 void wait_test_64(void) { Pin_H(); wait_cpuclock(64); Pin_L(); }
+attr_aligned16 void wait_test_65(void) { Pin_H(); wait_cpuclock(65); Pin_L(); }
 
-attr_aligned16 void wait_test_72(void) { PinHi(); wait_cpuclock(72); PinLow(); }
+attr_aligned16 void wait_test_72(void) { Pin_H(); wait_cpuclock(72); Pin_L(); }
 
 attr_aligned16 void wait_test_9_p(void) {
-    PinHi();
+    Pin_H();
     wait_cpuclock(8);
     wait_cpuclock(1);
-    PinLow();
+    Pin_L();
 }
 
 attr_aligned16 void wait_test_10_p(void) {
-    PinHi();
+    Pin_H();
     wait_cpuclock(8);
     wait_cpuclock(2);
-    PinLow();
+    Pin_L();
 }
 
 attr_aligned16 void wait_test_11_p(void) {
-    PinHi();
+    Pin_H();
     wait_cpuclock(8);
     wait_cpuclock(3);
-    PinLow();
+    Pin_L();
 }
 
 attr_aligned16 void wait_test_12_p(void) {
-    PinHi();
+    Pin_H();
     wait_cpuclock(8);
     wait_cpuclock(4);
-    PinLow();
+    Pin_L();
 }
 
 attr_aligned16 void wait_test_16_p(void) {
-    PinHi();
-    wait_cpuclock(8);
-    wait_cpuclock(8);
-    PinLow();
+    Pin_H();
+    wait_cpuclock(8); wait_cpuclock(8);
+    Pin_L();
 }
 
 attr_aligned16 void wait_test_24_p(void) {
-    PinHi();
-    wait_cpuclock(8);
-    wait_cpuclock(8);
-    wait_cpuclock(8);
-    PinLow();
+    Pin_H();
+    wait_cpuclock(8); wait_cpuclock(8); wait_cpuclock(8);
+    Pin_L();
 }
 
 attr_aligned16 void wait_test_32_p(void) {
-    PinHi();
-    wait_cpuclock(8);
-    wait_cpuclock(8);
-    wait_cpuclock(8);
-    wait_cpuclock(8); //4
-    PinLow();
+    Pin_H();
+    wait_cpuclock(8); wait_cpuclock(8); wait_cpuclock(8); wait_cpuclock(8);
+    Pin_L();
 }
 
 attr_aligned16 void wait_test_48_p(void) {
-    PinHi();
-    wait_cpuclock(8);
-    wait_cpuclock(8);
-    wait_cpuclock(8);
-    wait_cpuclock(8); //4
-    wait_cpuclock(8);
-    wait_cpuclock(8);
-    PinLow();
+    Pin_H();
+    wait_cpuclock(8); wait_cpuclock(8); wait_cpuclock(8); wait_cpuclock(8);
+    wait_cpuclock(8); wait_cpuclock(8);
+    Pin_L();
 }
 
 attr_aligned16 void wait_test_64_p(void) {
-    PinHi();
-    wait_cpuclock(8);
-    wait_cpuclock(8);
-    wait_cpuclock(8);
-    wait_cpuclock(8);//4
-    wait_cpuclock(8);
-    wait_cpuclock(8);
-    wait_cpuclock(8);
-    wait_cpuclock(8);//8
-    PinLow();
+    Pin_H();
+    wait_cpuclock(8); wait_cpuclock(8); wait_cpuclock(8); wait_cpuclock(8);
+    wait_cpuclock(8); wait_cpuclock(8); wait_cpuclock(8); wait_cpuclock(8);
+    Pin_L();
 }
 
 attr_aligned16 void wait_test_65_p(void) {
-    PinHi();
-    wait_cpuclock(8);
-    wait_cpuclock(8);
-    wait_cpuclock(8);
-    wait_cpuclock(8);//4
-    wait_cpuclock(8);
-    wait_cpuclock(8);
-    wait_cpuclock(8);
-    wait_cpuclock(8);//8
+    Pin_H();
+    wait_cpuclock(8); wait_cpuclock(8); wait_cpuclock(8); wait_cpuclock(8);
+    wait_cpuclock(8); wait_cpuclock(8); wait_cpuclock(8); wait_cpuclock(8);
     wait_cpuclock(1);
-    PinLow();
+    Pin_L();
 }
 
 attr_aligned16 void wait_test_72_p(void) {
-    PinHi();
+    Pin_H();
+    wait_cpuclock(8); wait_cpuclock(8); wait_cpuclock(8); wait_cpuclock(8);
+    wait_cpuclock(8); wait_cpuclock(8); wait_cpuclock(8); wait_cpuclock(8);
     wait_cpuclock(8);
-    wait_cpuclock(8);
-    wait_cpuclock(8);
-    wait_cpuclock(8);//4
-    wait_cpuclock(8);
-    wait_cpuclock(8);
-    wait_cpuclock(8);
-    wait_cpuclock(8);//8
-    wait_cpuclock(8);
-    PinLow();
+    Pin_L();
 }
 
 void matrix_scan_post_user(void) {
@@ -273,6 +252,16 @@ void matrix_scan_post_user(void) {
         case 7: wait16_test_8(); break;
         case 8: wait16_test_9(); break;
         case 9: wait16_test_10(); break;
+#elif defined(ALIGN_TEST)
+        case 0: wait_test_12(); break;
+        case 1: wait_test_12_a1(); break;
+        case 2: wait_test_12_a2(); break;
+        case 3: wait_test_12_a3(); break;
+        case 4: wait_test_12_a4(); break;
+        case 5: wait_test_12_a5(); break;
+        case 6: wait_test_12_a6(); break;
+        case 7: wait_test_12_a7(); break;
+        case 8: wait_test_1(); break;
 #else
         case 0: wait_test_0(); break;
         case 1: wait_test_1(); break;
