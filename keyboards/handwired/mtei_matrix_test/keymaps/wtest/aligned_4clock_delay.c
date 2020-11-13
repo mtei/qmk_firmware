@@ -1,3 +1,4 @@
+/* clang-format off */
 #if defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__)
   #ifndef __OPTIMIZE__
     #error "Compiler optimizations disabled; wait_cpuclock() won't work as designed"
