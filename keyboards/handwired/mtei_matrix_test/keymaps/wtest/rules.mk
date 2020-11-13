@@ -24,6 +24,9 @@ ifneq ($(strip $(TEST)),)
     ifeq ($(strip $1),align)
         TEST_TYPE = align
     endif
+    ifeq ($(strip $1),allnop)
+        TEST_TYPE = allnop
+    endif
   endef
 
   COMMA=,
@@ -45,6 +48,9 @@ ifeq ($(strip $(TEST_TYPE)),16clock)
 endif
 ifeq ($(strip $(TEST_TYPE)),align)
   OPT_DEFS += -DALIGN_TEST
+endif
+ifeq ($(strip $(TEST_TYPE)),allnop)
+  OPT_DEFS += -DALLNOP_TEST
 endif
 
 $(info .)
