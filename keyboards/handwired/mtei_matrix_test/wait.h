@@ -1,4 +1,5 @@
 #pragma once
+/* clang-format off */
 
 #include_next "wait.h"
 
@@ -19,15 +20,17 @@ extern "C" {
   #endif
 
 extern void aligned_4clock_delay(unsigned int n);
+extern void aligned_16clock_delay(unsigned int n);
+#define OVER_HEAD_CALL_4CLOCK_DELAY 4
 
 __attribute__((always_inline))
-static inline void wait_cpuclock(int n) {
+static inline void wait_cpuclock(unsigned int n) {
     /* The argument n must be a constant expression.
      * That way, compiler optimization will remove unnecessary code. */
     if (n < 1 ) { return; }
     if (n > 8) {
-        int n4 = (n - 4)/4;
-        n = n - n4*4 - 4;
+        unsigned int n4 = (n - OVER_HEAD_CALL_4CLOCK_DELAY)/4;
+        n = n - n4*4 - OVER_HEAD_CALL_4CLOCK_DELAY;
         aligned_4clock_delay(n4);
     }
     switch (n) {
