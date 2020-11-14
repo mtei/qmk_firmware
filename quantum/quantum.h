@@ -208,6 +208,8 @@ typedef uint8_t pin_t;
 
 #    define togglePin(pin) (PORTx_ADDRESS(pin) ^= _BV((pin)&0xF))
 
+#    define waitOutputPinValid() wait_cpuclock(1)
+
 #elif defined(PROTOCOL_CHIBIOS)
 typedef ioline_t pin_t;
 
@@ -223,6 +225,16 @@ typedef ioline_t pin_t;
 #    define readPin(pin) palReadLine(pin)
 
 #    define togglePin(pin) palToggleLine(pin)
+
+#endif
+
+#if defined(__ARMEL__) || defined(__ARMEB__)
+#    if  defined(STM32_SYSCLK)
+#        define WAITOUTPUTPINVALID_DELAY (STM32_SYSCLK/1000000L / 4)
+#    elif defined(KINETIS_SYSCLK_FREQUENCY)
+#        define WAITOUTPUTPINVALID_DELAY (KINETIS_SYSCLK_FREQUENCY/1000000L / 4)
+#    endif
+#    define waitOutputPinValid() wait_cpuclock(WAITOUTPUTPINVALID_DELAY)
 #endif
 
 // Atomic macro to help make GPIO and other controls atomic.
