@@ -10,6 +10,7 @@
 extern void aligned_4clock_delay(unsigned int n);
 extern void aligned_16clock_delay(unsigned int n);
 
+#undef  wait_cpuclock
 #define wait_cpuclock(n) wait_cpuclock_4noploop(n)
 
 #ifdef LONG_TEST
