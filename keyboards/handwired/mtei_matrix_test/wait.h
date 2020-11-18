@@ -7,8 +7,13 @@
 extern "C" {
 #endif
 
+#ifndef SLOW_CLOCK
 #define ALIGNED_NOP_LOOP_CLOCKS 9
 #define ALIGNED_NOP_LOOP_CALL_OVER_HEAD 8
+#else
+#define ALIGNED_NOP_LOOP_CLOCKS 6
+#define ALIGNED_NOP_LOOP_CALL_OVER_HEAD 4
+#endif
 
 // AVR
 #if defined(__AVR__)
