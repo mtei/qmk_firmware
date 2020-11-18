@@ -1,4 +1,6 @@
-SRC += wait_test.c aligned_4clock_delay.c
+CONSOLE_ENABLE = yes
+
+SRC += wait_test.c aligned_nop_loop.c
 
 ifneq ($(strip $(TEST)),)
   define KEYMAP_OPTION_PARSE
@@ -15,11 +17,8 @@ ifneq ($(strip $(TEST)),)
     ifeq ($(strip $1),long)
         TEST_TYPE = long
     endif
-    ifeq ($(strip $1),4clock)
-        TEST_TYPE = 4clock
-    endif
-    ifeq ($(strip $1),16clock)
-        TEST_TYPE = 16clock
+    ifeq ($(strip $1),loop)
+        TEST_TYPE = loop
     endif
     ifeq ($(strip $1),align)
         TEST_TYPE = align
@@ -40,11 +39,8 @@ endif
 ifeq ($(strip $(TEST_TYPE)),long)
   OPT_DEFS += -DLONG_TEST
 endif
-ifeq ($(strip $(TEST_TYPE)),4clock)
-  OPT_DEFS += -DTEST_4CLOCK
-endif
-ifeq ($(strip $(TEST_TYPE)),16clock)
-  OPT_DEFS += -DTEST_16CLOCK
+ifeq ($(strip $(TEST_TYPE)),loop)
+  OPT_DEFS += -DLOOP_TEST
 endif
 ifeq ($(strip $(TEST_TYPE)),align)
   OPT_DEFS += -DALIGN_TEST
