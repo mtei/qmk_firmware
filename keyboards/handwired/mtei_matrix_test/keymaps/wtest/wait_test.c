@@ -22,7 +22,7 @@ extern void aligned_nop_loop(unsigned int n);
 #define TEST_INTERVAL 2000
 #elif defined(ALIGN_TEST)
 #define WAIT_NUM_BASE 0
-#define WAIT_NUM_LOOP 9
+#define WAIT_NUM_LOOP 20
 #define TEST_INTERVAL 1000
 #elif defined(ALLNOP_TEST)
 #define WAIT_NUM_BASE 0
@@ -351,13 +351,21 @@ attr_aligned16 void wait_test_72_all(void) { Pin_H(); wait_cpuclock_allnop(72); 
 
 attr_aligned16 void wait_test_100_all(void) { Pin_H(); wait_cpuclock_allnop(100); Pin_L(); }
 
-attr_aligned16 void wait_test_12_a1(void) { wait_cpuclock(1); Pin_H(); wait_cpuclock(12); Pin_L(); }
-attr_aligned16 void wait_test_12_a2(void) { wait_cpuclock(2); Pin_H(); wait_cpuclock(12); Pin_L(); }
-attr_aligned16 void wait_test_12_a3(void) { wait_cpuclock(3); Pin_H(); wait_cpuclock(12); Pin_L(); }
-attr_aligned16 void wait_test_12_a4(void) { wait_cpuclock(4); Pin_H(); wait_cpuclock(12); Pin_L(); }
-attr_aligned16 void wait_test_12_a5(void) { wait_cpuclock(5); Pin_H(); wait_cpuclock(12); Pin_L(); }
-attr_aligned16 void wait_test_12_a6(void) { wait_cpuclock(6); Pin_H(); wait_cpuclock(12); Pin_L(); }
-attr_aligned16 void wait_test_12_a7(void) { wait_cpuclock(7); Pin_H(); wait_cpuclock(12); Pin_L(); }
+attr_aligned16 void wait_test_20_a1(void) { wait_cpuclock(1); Pin_H(); wait_cpuclock(20); Pin_L(); }
+attr_aligned16 void wait_test_20_a2(void) { wait_cpuclock(2); Pin_H(); wait_cpuclock(20); Pin_L(); }
+attr_aligned16 void wait_test_20_a3(void) { wait_cpuclock(3); Pin_H(); wait_cpuclock(20); Pin_L(); }
+attr_aligned16 void wait_test_20_a4(void) { wait_cpuclock(4); Pin_H(); wait_cpuclock(20); Pin_L(); }
+attr_aligned16 void wait_test_20_a5(void) { wait_cpuclock(5); Pin_H(); wait_cpuclock(20); Pin_L(); }
+attr_aligned16 void wait_test_20_a6(void) { wait_cpuclock(6); Pin_H(); wait_cpuclock(20); Pin_L(); }
+attr_aligned16 void wait_test_20_a7(void) { wait_cpuclock(7); Pin_H(); wait_cpuclock(20); Pin_L(); }
+attr_aligned16 void wait_test_20_a8(void) { wait_cpuclock(8); Pin_H(); wait_cpuclock(20); Pin_L(); }
+attr_aligned16 void wait_test_20_a9(void) { wait_cpuclock(9); Pin_H(); wait_cpuclock(20); Pin_L(); }
+attr_aligned16 void wait_test_20_a10(void) { wait_cpuclock(10); Pin_H(); wait_cpuclock(20); Pin_L(); }
+attr_aligned16 void wait_test_20_a11(void) { wait_cpuclock(11); Pin_H(); wait_cpuclock(20); Pin_L(); }
+attr_aligned16 void wait_test_20_a12(void) { wait_cpuclock(12); Pin_H(); wait_cpuclock(20); Pin_L(); }
+attr_aligned16 void wait_test_20_a13(void) { wait_cpuclock(13); Pin_H(); wait_cpuclock(20); Pin_L(); }
+attr_aligned16 void wait_test_20_a14(void) { wait_cpuclock(14); Pin_H(); wait_cpuclock(20); Pin_L(); }
+attr_aligned16 void wait_test_20_a15(void) { wait_cpuclock(15); Pin_H(); wait_cpuclock(20); Pin_L(); }
 
 void matrix_scan_post_user(void) {
     static int testnum = 0;
@@ -411,15 +419,26 @@ void matrix_scan_post_user(void) {
         case 23: break;
 
 #elif defined(ALIGN_TEST)
-        case 0: wait_test_12(); break;
-        case 1: wait_test_12_a1(); break;
-        case 2: wait_test_12_a2(); break;
-        case 3: wait_test_12_a3(); break;
-        case 4: wait_test_12_a4(); break;
-        case 5: wait_test_12_a5(); break;
-        case 6: wait_test_12_a6(); break;
-        case 7: wait_test_12_a7(); break;
-        case 8: wait_test_1(); break;
+        case 0: wait_test_1(); break;
+        case 1: wait_test_20();    dprintf("align  0\n"); break;
+        case 2: wait_test_20_a1(); dprintf("align  1\n"); break;
+        case 3: wait_test_20_a2(); dprintf("align  2\n"); break;
+        case 4: wait_test_20_a3(); dprintf("align  3\n"); break;
+        case 5: wait_test_1(); break;
+        case 6: wait_test_20_a4(); dprintf("align  4\n"); break;
+        case 7: wait_test_20_a5(); dprintf("align  5\n"); break;
+        case 8: wait_test_20_a6(); dprintf("align  6\n"); break;
+        case 9: wait_test_20_a7(); dprintf("align  7\n"); break;
+        case 10: wait_test_1(); break;
+        case 11: wait_test_20_a8(); dprintf("align  8\n"); break;
+        case 12: wait_test_20_a9(); dprintf("align  9\n"); break;
+        case 13: wait_test_20_a10(); dprintf("align  10\n"); break;
+        case 14: wait_test_20_a11(); dprintf("align  11\n"); break;
+        case 15: wait_test_1(); break;
+        case 16: wait_test_20_a12(); dprintf("align  12\n"); break;
+        case 17: wait_test_20_a13(); dprintf("align  13\n"); break;
+        case 18: wait_test_20_a14(); dprintf("align  14\n"); break;
+        case 19: wait_test_20_a15(); dprintf("align  15\n"); break;
 #elif defined(ALLNOP_TEST)
         case 0: wait_test_0_all(); break;
         case 1: wait_test_1_all(); break;
