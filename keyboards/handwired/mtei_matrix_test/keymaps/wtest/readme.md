@@ -1,38 +1,25 @@
 # wait_test.c
 
-## slow clock TEST=slow (8MHz)
+##  `make TEST=loop handwired/mtei_matrix_test/proton_c:wtest:flash`
 
-* eg. `make TEST=slow,long handwired/mtei_matrix_test/proton_c:wtest:flash`
+`ALIGNED_NOP_LOOP_CLOCKS` と `ALIGNED_NOP_LOOP_CALL_OVER_HEAD` を決定するためのテスト
 
-## normal clock TEST=fast (72MHz) (default)
+##  `make TEST=long handwired/mtei_matrix_test/proton_c:wtest:flash`
 
-* eg. `make TEST=long handwired/mtei_matrix_test/proton_c:wtest:flash`
-* eg. `make TEST=fast,long handwired/mtei_matrix_test/proton_c:wtest:flash`
+16, 32, 48, 64, 72 のそれぞれの値で、`wait_cpuclock_allnop()` と `wait_cpuclock_noploop()` が一致するかの確認をする。
 
-## normal test
+##  `make TEST=align handwired/mtei_matrix_test/proton_c:wtest:flash`
 
-wait 0...31 clock
+`wait_cpuclock_noploop()` の展開位置で、結果がかわる事を確認する。
 
-* eg. `make TEST= handwired/mtei_matrix_test/proton_c:wtest:flash`
+##  `make TEST=allnop handwired/mtei_matrix_test/proton_c:wtest:flash`
 
-## long test
+`wait_cpuclock_allnop()` を 0..72 で確認する。
 
-* 16 nop vs 16 clock(loop)
-* 32 nop vs 32 clock(loop)
-* 48 nop vs 48 clock(loop)
-* 64 nop vs 64 clock(loop)
-* 72 nop vs 72 clock(loop)
+##  `make TEST=normal handwired/mtei_matrix_test/proton_c:wtest:flash`
 
-* eg. `make TEST=long handwired/mtei_matrix_test/proton_c:wtest:flash`
+`wait_cpuclock_noploop()` を 0..72 で確認する。
 
-## aligned_4clock_delay() test
+## `make TEST=slow,XXX handwired/mtei_matrix_test/proton_c:wtest:flash`
 
-* eg. `make TEST=4clock handwired/mtei_matrix_test/proton_c:wtest:flash`
-
-## aligned_16clock_delay() test
-
-* eg. `make TEST=16clock handwired/mtei_matrix_test/proton_c:wtest:flash`
-
-## align 0,1,..,7 test
-
-* eg. `make TEST=align handwired/mtei_matrix_test/proton_c:wtest:flash`
+上記のテストを システムクロック 8MHz の設定で行なう。
