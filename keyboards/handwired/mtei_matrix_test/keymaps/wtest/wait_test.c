@@ -55,7 +55,8 @@ static inline void wait_cpuclock_noploop_4(unsigned int n) {
     /* The argument n must be a constant expression.
      * That way, compiler optimization will remove unnecessary code. */
     if (n < 1) { return; }
-    if (n > ((ALIGNED_NOP_LOOP_CALL_OVER_HEAD)+(ALIGNED_NOP_LOOP_CLOCKS))) {
+    if (n > 8 &&
+        n > ((ALIGNED_NOP_LOOP_CALL_OVER_HEAD)+(ALIGNED_NOP_LOOP_CLOCKS))) {
         unsigned int loop = (n - (ALIGNED_NOP_LOOP_CALL_OVER_HEAD))/(ALIGNED_NOP_LOOP_CLOCKS);
         n = n - loop*(ALIGNED_NOP_LOOP_CLOCKS) - (ALIGNED_NOP_LOOP_CALL_OVER_HEAD);
         aligned_nop_loop(loop);
@@ -71,7 +72,8 @@ static inline void wait_cpuclock_noploop_5(unsigned int n) {
     /* The argument n must be a constant expression.
      * That way, compiler optimization will remove unnecessary code. */
     if (n < 1) { return; }
-    if (n > ((ALIGNED_NOP_LOOP_CALL_OVER_HEAD)+(ALIGNED_NOP_LOOP_CLOCKS))) {
+    if (n > 8 &&
+        n > ((ALIGNED_NOP_LOOP_CALL_OVER_HEAD)+(ALIGNED_NOP_LOOP_CLOCKS))) {
         unsigned int loop = (n - (ALIGNED_NOP_LOOP_CALL_OVER_HEAD))/(ALIGNED_NOP_LOOP_CLOCKS);
         n = n - loop*(ALIGNED_NOP_LOOP_CLOCKS) - (ALIGNED_NOP_LOOP_CALL_OVER_HEAD);
         aligned_nop_loop(loop);
@@ -87,7 +89,8 @@ static inline void wait_cpuclock_noploop_6(unsigned int n) {
     /* The argument n must be a constant expression.
      * That way, compiler optimization will remove unnecessary code. */
     if (n < 1) { return; }
-    if (n > ((ALIGNED_NOP_LOOP_CALL_OVER_HEAD)+(ALIGNED_NOP_LOOP_CLOCKS))) {
+    if (n > 8 &&
+        n > ((ALIGNED_NOP_LOOP_CALL_OVER_HEAD)+(ALIGNED_NOP_LOOP_CLOCKS))) {
         unsigned int loop = (n - (ALIGNED_NOP_LOOP_CALL_OVER_HEAD))/(ALIGNED_NOP_LOOP_CLOCKS);
         n = n - loop*(ALIGNED_NOP_LOOP_CLOCKS) - (ALIGNED_NOP_LOOP_CALL_OVER_HEAD);
         aligned_nop_loop(loop);
@@ -103,7 +106,8 @@ static inline void wait_cpuclock_noploop_7(unsigned int n) {
     /* The argument n must be a constant expression.
      * That way, compiler optimization will remove unnecessary code. */
     if (n < 1) { return; }
-    if (n > ((ALIGNED_NOP_LOOP_CALL_OVER_HEAD)+(ALIGNED_NOP_LOOP_CLOCKS))) {
+    if (n > 8 &&
+        n > ((ALIGNED_NOP_LOOP_CALL_OVER_HEAD)+(ALIGNED_NOP_LOOP_CLOCKS))) {
         unsigned int loop = (n - (ALIGNED_NOP_LOOP_CALL_OVER_HEAD))/(ALIGNED_NOP_LOOP_CLOCKS);
         n = n - loop*(ALIGNED_NOP_LOOP_CLOCKS) - (ALIGNED_NOP_LOOP_CALL_OVER_HEAD);
         aligned_nop_loop(loop);
@@ -119,7 +123,8 @@ static inline void wait_cpuclock_noploop_8(unsigned int n) {
     /* The argument n must be a constant expression.
      * That way, compiler optimization will remove unnecessary code. */
     if (n < 1) { return; }
-    if (n > ((ALIGNED_NOP_LOOP_CALL_OVER_HEAD)+(ALIGNED_NOP_LOOP_CLOCKS))) {
+    if (n > 8 &&
+        n > ((ALIGNED_NOP_LOOP_CALL_OVER_HEAD)+(ALIGNED_NOP_LOOP_CLOCKS))) {
         unsigned int loop = (n - (ALIGNED_NOP_LOOP_CALL_OVER_HEAD))/(ALIGNED_NOP_LOOP_CLOCKS);
         n = n - loop*(ALIGNED_NOP_LOOP_CLOCKS) - (ALIGNED_NOP_LOOP_CALL_OVER_HEAD);
         aligned_nop_loop(loop);
@@ -135,7 +140,8 @@ static inline void wait_cpuclock_noploop_9(unsigned int n) {
     /* The argument n must be a constant expression.
      * That way, compiler optimization will remove unnecessary code. */
     if (n < 1) { return; }
-    if (n > ((ALIGNED_NOP_LOOP_CALL_OVER_HEAD)+(ALIGNED_NOP_LOOP_CLOCKS))) {
+    if (n > 8 &&
+        n > ((ALIGNED_NOP_LOOP_CALL_OVER_HEAD)+(ALIGNED_NOP_LOOP_CLOCKS))) {
         unsigned int loop = (n - (ALIGNED_NOP_LOOP_CALL_OVER_HEAD))/(ALIGNED_NOP_LOOP_CLOCKS);
         n = n - loop*(ALIGNED_NOP_LOOP_CLOCKS) - (ALIGNED_NOP_LOOP_CALL_OVER_HEAD);
         aligned_nop_loop(loop);
@@ -151,7 +157,8 @@ static inline void wait_cpuclock_noploop_10(unsigned int n) {
     /* The argument n must be a constant expression.
      * That way, compiler optimization will remove unnecessary code. */
     if (n < 1) { return; }
-    if (n > ((ALIGNED_NOP_LOOP_CALL_OVER_HEAD)+(ALIGNED_NOP_LOOP_CLOCKS))) {
+    if (n > 8 &&
+        n > ((ALIGNED_NOP_LOOP_CALL_OVER_HEAD)+(ALIGNED_NOP_LOOP_CLOCKS))) {
         unsigned int loop = (n - (ALIGNED_NOP_LOOP_CALL_OVER_HEAD))/(ALIGNED_NOP_LOOP_CLOCKS);
         n = n - loop*(ALIGNED_NOP_LOOP_CLOCKS) - (ALIGNED_NOP_LOOP_CALL_OVER_HEAD);
         aligned_nop_loop(loop);
@@ -167,7 +174,8 @@ static inline void wait_cpuclock_noploop_11(unsigned int n) {
     /* The argument n must be a constant expression.
      * That way, compiler optimization will remove unnecessary code. */
     if (n < 1) { return; }
-    if (n > ((ALIGNED_NOP_LOOP_CALL_OVER_HEAD)+(ALIGNED_NOP_LOOP_CLOCKS))) {
+    if (n > 8 &&
+        n > ((ALIGNED_NOP_LOOP_CALL_OVER_HEAD)+(ALIGNED_NOP_LOOP_CLOCKS))) {
         unsigned int loop = (n - (ALIGNED_NOP_LOOP_CALL_OVER_HEAD))/(ALIGNED_NOP_LOOP_CLOCKS);
         n = n - loop*(ALIGNED_NOP_LOOP_CLOCKS) - (ALIGNED_NOP_LOOP_CALL_OVER_HEAD);
         aligned_nop_loop(loop);
@@ -183,7 +191,8 @@ static inline void wait_cpuclock_noploop_12(unsigned int n) {
     /* The argument n must be a constant expression.
      * That way, compiler optimization will remove unnecessary code. */
     if (n < 1) { return; }
-    if (n > ((ALIGNED_NOP_LOOP_CALL_OVER_HEAD)+(ALIGNED_NOP_LOOP_CLOCKS))) {
+    if (n > 8 &&
+        n > ((ALIGNED_NOP_LOOP_CALL_OVER_HEAD)+(ALIGNED_NOP_LOOP_CLOCKS))) {
         unsigned int loop = (n - (ALIGNED_NOP_LOOP_CALL_OVER_HEAD))/(ALIGNED_NOP_LOOP_CLOCKS);
         n = n - loop*(ALIGNED_NOP_LOOP_CLOCKS) - (ALIGNED_NOP_LOOP_CALL_OVER_HEAD);
         aligned_nop_loop(loop);
