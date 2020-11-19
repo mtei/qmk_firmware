@@ -8,16 +8,18 @@ extern "C" {
 #endif
 
 #ifndef SLOW_CLOCK
-#define ALIGNED_NOP_LOOP_CLOCKS 9
-#define ALIGNED_NOP_LOOP_CALL_OVER_HEAD 8
+// Proton-C 72MHz
+  #define ALIGNED_NOP_LOOP_CLOCKS 9
+  #define ALIGNED_NOP_LOOP_CALL_OVER_HEAD 8
 #else
-#define ALIGNED_NOP_LOOP_CLOCKS 6
-#define ALIGNED_NOP_LOOP_CALL_OVER_HEAD 4
+// Proton-C 8MHz (mcuconf.h #define STM32_SW STM32_SW_HSI)
+  #define ALIGNED_NOP_LOOP_CLOCKS 6
+  #define ALIGNED_NOP_LOOP_CALL_OVER_HEAD 4
 #endif
 
 // AVR
 #if defined(__AVR__)
-#    define wait_cpuclock(x) __builtin_avr_delay_cycles(x)
+  #define wait_cpuclock(x) __builtin_avr_delay_cycles(x)
 #endif
 
 // Cortex-M3 or Cortex-M4
@@ -70,7 +72,8 @@ static inline void wait_cpuclock_noploop(unsigned int n) {
     /* The argument n must be a constant expression.
      * That way, compiler optimization will remove unnecessary code. */
     if (n < 1) { return; }
-    if (n > ((ALIGNED_NOP_LOOP_CALL_OVER_HEAD)+(ALIGNED_NOP_LOOP_CLOCKS))) {
+    if (n > 8 &&
+        n > ((ALIGNED_NOP_LOOP_CALL_OVER_HEAD)+(ALIGNED_NOP_LOOP_CLOCKS))) {
         unsigned int loop = (n - (ALIGNED_NOP_LOOP_CALL_OVER_HEAD))/(ALIGNED_NOP_LOOP_CLOCKS);
         n = n - loop*(ALIGNED_NOP_LOOP_CLOCKS) - (ALIGNED_NOP_LOOP_CALL_OVER_HEAD);
         aligned_nop_loop(loop);
