@@ -18,8 +18,8 @@ extern void aligned_nop_loop(unsigned int n);
 #define TEST_INTERVAL 2000
 #elif defined(LOOP_TEST)
 #define WAIT_NUM_BASE 0
-#define WAIT_NUM_LOOP 28
-#define TEST_INTERVAL 500
+#define WAIT_NUM_LOOP 24
+#define TEST_INTERVAL 2000
 #elif defined(ALIGN_TEST)
 #define WAIT_NUM_BASE 0
 #define WAIT_NUM_LOOP 9
@@ -45,7 +45,7 @@ void keyboard_post_init_user() {
 #define attr_aligned16 __attribute__ ((aligned(16),noinline))
 
 #undef ALIGNED_NOP_LOOP_CALL_OVER_HEAD
-#define ALIGNED_NOP_LOOP_CALL_OVER_HEAD 8
+#define ALIGNED_NOP_LOOP_CALL_OVER_HEAD 0
 
 #undef ALIGNED_NOP_LOOP_CLOCKS
 #define ALIGNED_NOP_LOOP_CLOCKS 4
@@ -200,23 +200,6 @@ attr_aligned16 void wait_cpuclock_noploop_9_100(void) { Pin_H(); wait_cpuclock_n
 attr_aligned16 void wait_cpuclock_noploop_10_100(void) { Pin_H(); wait_cpuclock_noploop_10(100); Pin_L(); }
 attr_aligned16 void wait_cpuclock_noploop_11_100(void) { Pin_H(); wait_cpuclock_noploop_11(100); Pin_L(); }
 attr_aligned16 void wait_cpuclock_noploop_12_100(void) { Pin_H(); wait_cpuclock_noploop_12(100); Pin_L(); }
-
-attr_aligned16 void wait_loop_overhead_test_30_11(void)   {
-    Pin_H();
-    wait_cpuclock_noploop_12(30);    wait_cpuclock_noploop_12(30);
-    wait_cpuclock_noploop_12(30);    wait_cpuclock_noploop_12(30);
-    wait_cpuclock_noploop_12(30);    wait_cpuclock_noploop_12(30);
-    wait_cpuclock_noploop_12(30);    wait_cpuclock_noploop_12(30);
-    wait_cpuclock_noploop_12(30);    wait_cpuclock_noploop_12(30);
-    wait_cpuclock_noploop_12(30);
-    Pin_L();
-}
-
-attr_aligned16 void wait_loop_overhead_test_330_1(void)   {
-    Pin_H();
-    wait_cpuclock_noploop_12(30*11);
-    Pin_L();
-}
 
 attr_aligned16 void wait_test_0(void)  { Pin_H(); wait_cpuclock(0); Pin_L(); }
 attr_aligned16 void wait_test_1(void)  { Pin_H(); wait_cpuclock(1); Pin_L(); }
@@ -403,33 +386,29 @@ void matrix_scan_post_user(void) {
         case 14: wait_test_72();   break;
 #elif defined(LOOP_TEST)
         case 0: wait_test_2(); break;
-        case 1: wait_test_100_all(); dprintf("all nop 100\n"); break;
-        case 2: wait_cpuclock_noploop_4_100(); dprintf("loop cycle 4\n"); break;
-        case 3: wait_test_100_all(); dprintf("all nop 100\n"); break;
-        case 4: wait_cpuclock_noploop_5_100(); dprintf("loop cycle 5\n"); break;
-        case 5: wait_test_100_all(); dprintf("all nop 100\n"); break;
-        case 6: wait_cpuclock_noploop_6_100(); dprintf("loop cycle 6\n"); break;
-        case 7: wait_test_100_all(); dprintf("all nop 100\n"); break;
-        case 8: wait_cpuclock_noploop_7_100(); dprintf("loop cycle 7\n"); break;
-        case 9: wait_test_100_all(); dprintf("all nop 100\n"); break;
-        case 10: wait_cpuclock_noploop_8_100(); dprintf("loop cycle 8\n"); break;
-        case 11: wait_test_100_all(); dprintf("all nop 100\n"); break;
-        case 12: wait_cpuclock_noploop_9_100(); dprintf("loop cycle 9\n"); break;
-        case 13: wait_test_100_all(); dprintf("all nop 100\n"); break;
-        case 14: wait_cpuclock_noploop_10_100(); dprintf("loop cycle 10\n"); break;
-        case 15: wait_test_100_all(); dprintf("all nop 100\n"); break;
-        case 16: wait_cpuclock_noploop_11_100(); dprintf("loop cycle 11\n"); break;
-        case 17: wait_test_100_all(); dprintf("all nop 100\n"); break;
-        case 18: wait_cpuclock_noploop_12_100(); dprintf("loop cycle 12\n"); break;
-        case 19: break;
+        case 1: wait_test_100_all();              dprintf("all nop 100\n"); break;
+        case 2: wait_cpuclock_noploop_4_100();     dprintf("loop cycle 4\n"); break;
+        case 3: wait_test_100_all();              dprintf("all nop 100\n"); break;
+        case 4: wait_cpuclock_noploop_5_100();     dprintf("loop cycle 5\n"); break;
+        case 5: wait_test_100_all();              dprintf("all nop 100\n"); break;
+        case 6: wait_cpuclock_noploop_6_100();     dprintf("loop cycle 6\n"); break;
+        case 7: wait_test_100_all();              dprintf("all nop 100\n"); break;
+        case 8: wait_cpuclock_noploop_7_100();     dprintf("loop cycle 7\n"); break;
+        case 9: wait_test_100_all();              dprintf("all nop 100\n"); break;
+        case 10: wait_cpuclock_noploop_8_100();    dprintf("loop cycle 8\n"); break;
+        case 11: wait_test_100_all();             dprintf("all nop 100\n"); break;
+        case 12: wait_cpuclock_noploop_9_100();    dprintf("loop cycle 9\n"); break;
+        case 13: wait_test_100_all();             dprintf("all nop 100\n"); break;
+        case 14: wait_cpuclock_noploop_10_100();   dprintf("loop cycle 10\n"); break;
+        case 15: wait_test_100_all();             dprintf("all nop 100\n"); break;
+        case 16: wait_cpuclock_noploop_11_100();   dprintf("loop cycle 11\n"); break;
+        case 17: wait_test_100_all();             dprintf("all nop 100\n"); break;
+        case 18: wait_cpuclock_noploop_12_100();   dprintf("loop cycle 12\n"); break;
+        case 19: wait_test_100_all();             dprintf("all nop 100\n"); break;
         case 20: break;
         case 21: break;
         case 22: break;
-        case 23: wait_loop_overhead_test_330_1(); dprintf("over head 1\n"); break;
-        case 24: wait_loop_overhead_test_30_11(); dprintf("over head 11\n"); break;
-        case 25: break;
-        case 26: break;
-        case 27: break;
+        case 23: break;
 
 #elif defined(ALIGN_TEST)
         case 0: wait_test_12(); break;
