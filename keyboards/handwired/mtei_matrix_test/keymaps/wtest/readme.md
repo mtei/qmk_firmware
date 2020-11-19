@@ -20,6 +20,10 @@
 
 `wait_cpuclock_noploop()` を 0..72 で確認する。
 
+##  `make TEST=iodelay handwired/mtei_matrix_test/proton_c:wtest:flash`
+
+入力の変化に、どれくらいの遅れを見込んでおけるか確認する。
+
 ## `make TEST=slow,XXX handwired/mtei_matrix_test/proton_c:wtest:flash`
 
 上記のテストを システムクロック 8MHz の設定で行なう。
