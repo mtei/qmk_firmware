@@ -26,6 +26,9 @@ ifneq ($(strip $(TEST)),)
     ifeq ($(strip $1),allnop)
         TEST_TYPE = allnop
     endif
+    ifeq ($(strip $1),iodelay)
+        TEST_TYPE = iodelay
+    endif
   endef
 
   COMMA=,
@@ -47,6 +50,10 @@ ifeq ($(strip $(TEST_TYPE)),align)
 endif
 ifeq ($(strip $(TEST_TYPE)),allnop)
   OPT_DEFS += -DALLNOP_TEST
+endif
+
+ifeq ($(strip $(TEST_TYPE)),iodelay)
+  OPT_DEFS += -DIODELAY_TEST
 endif
 
 $(info .)

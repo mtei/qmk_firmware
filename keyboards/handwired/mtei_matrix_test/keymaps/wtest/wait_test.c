@@ -4,6 +4,7 @@
 //#define LOOP_TEST
 //#define ALIGN_TEST
 //#define ALLNOP_TEST
+//#define IODELAY_TEST
 
 /* clang-format off */
 
@@ -12,7 +13,11 @@ extern void aligned_nop_loop(unsigned int n);
 #undef  wait_cpuclock
 #define wait_cpuclock(n) wait_cpuclock_noploop(n)
 
-#ifdef LONG_TEST
+#ifdef IODELAY_TEST
+#define WAIT_NUM_BASE 0
+#define WAIT_NUM_LOOP 11
+#define TEST_INTERVAL 1000
+#elif defined(LONG_TEST)
 #define WAIT_NUM_BASE 0
 #define WAIT_NUM_LOOP 15
 #define TEST_INTERVAL 2000
@@ -36,12 +41,15 @@ extern void aligned_nop_loop(unsigned int n);
 
 void keyboard_post_init_user() {
     debug_enable = true;
-    setPinOutput(WAIT_TSET_PIN);
-    writePinLow(WAIT_TSET_PIN);
+    setPinOutput(WAIT_TEST_PIN);
+    writePinLow(WAIT_TEST_PIN);
+    setPinInput(INPUT_TEST_PIN);
 }
 
-#define Pin_H() writePinHigh(WAIT_TSET_PIN)
-#define Pin_L() writePinLow(WAIT_TSET_PIN)
+#define Pin_H() writePinHigh(WAIT_TEST_PIN)
+#define Pin_L() writePinLow(WAIT_TEST_PIN)
+#define Pin_in() readPin(INPUT_TEST_PIN)
+
 #define attr_aligned16 __attribute__ ((aligned(16),noinline))
 
 #undef ALIGNED_NOP_LOOP_CALL_OVER_HEAD
@@ -199,6 +207,79 @@ static inline void wait_cpuclock_noploop_12(unsigned int n) {
     }
     WAIT_EXPANDING_NOP_24(n);
 }
+
+attr_aligned16 void outin_0(void) {
+    uint8_t idata;
+    wait_cpuclock_allnop(1);
+    Pin_H(); wait_cpuclock_allnop(0);
+    idata = Pin_in(); wait_cpuclock_allnop(4); Pin_L(); wait_cpuclock_allnop(20);
+    writePin(WAIT_TEST_PIN, (idata != 0)); wait_cpuclock_allnop(5); Pin_L();
+}
+
+attr_aligned16 void outin_1(void) {
+    uint8_t idata;
+    wait_cpuclock_allnop(1);
+    Pin_H(); wait_cpuclock_allnop(1);
+    idata = Pin_in(); wait_cpuclock_allnop(4); Pin_L(); wait_cpuclock_allnop(20);
+    writePin(WAIT_TEST_PIN, (idata != 0)); wait_cpuclock_allnop(5); Pin_L();
+}
+
+attr_aligned16 void outin_2(void) {
+    uint8_t idata;
+    wait_cpuclock_allnop(1);
+    Pin_H(); wait_cpuclock_allnop(2);
+    idata = Pin_in(); wait_cpuclock_allnop(4); Pin_L(); wait_cpuclock_allnop(20);
+    writePin(WAIT_TEST_PIN, (idata != 0)); wait_cpuclock_allnop(5); Pin_L();
+}
+
+attr_aligned16 void outin_3(void) {
+    uint8_t idata;
+    wait_cpuclock_allnop(1);
+    Pin_H(); wait_cpuclock_allnop(3);
+    idata = Pin_in(); wait_cpuclock_allnop(4); Pin_L(); wait_cpuclock_allnop(20);
+    writePin(WAIT_TEST_PIN, (idata != 0)); wait_cpuclock_allnop(5); Pin_L();
+}
+
+attr_aligned16 void outin_4(void) {
+    uint8_t idata;
+    wait_cpuclock_allnop(1);
+    Pin_H(); wait_cpuclock_allnop(4);
+    idata = Pin_in(); wait_cpuclock_allnop(4); Pin_L(); wait_cpuclock_allnop(20);
+    writePin(WAIT_TEST_PIN, (idata != 0)); wait_cpuclock_allnop(5); Pin_L();
+}
+
+attr_aligned16 void outin_5(void) {
+    uint8_t idata;
+    wait_cpuclock_allnop(1);
+    Pin_H(); wait_cpuclock_allnop(5);
+    idata = Pin_in(); wait_cpuclock_allnop(4); Pin_L(); wait_cpuclock_allnop(20);
+    writePin(WAIT_TEST_PIN, (idata != 0)); wait_cpuclock_allnop(5); Pin_L();
+}
+
+attr_aligned16 void outin_6(void) {
+    uint8_t idata;
+    wait_cpuclock_allnop(1);
+    Pin_H(); wait_cpuclock_allnop(6);
+    idata = Pin_in(); wait_cpuclock_allnop(4); Pin_L(); wait_cpuclock_allnop(20);
+    writePin(WAIT_TEST_PIN, (idata != 0)); wait_cpuclock_allnop(5); Pin_L();
+}
+
+attr_aligned16 void outin_7(void) {
+    uint8_t idata;
+    wait_cpuclock_allnop(1);
+    Pin_H(); wait_cpuclock_allnop(7);
+    idata = Pin_in(); wait_cpuclock_allnop(4); Pin_L(); wait_cpuclock_allnop(20);
+    writePin(WAIT_TEST_PIN, (idata != 0)); wait_cpuclock_allnop(5); Pin_L();
+}
+
+attr_aligned16 void outin_8(void) {
+    uint8_t idata;
+    wait_cpuclock_allnop(1);
+    Pin_H(); wait_cpuclock_allnop(8);
+    idata = Pin_in(); wait_cpuclock_allnop(4); Pin_L(); wait_cpuclock_allnop(20);
+    writePin(WAIT_TEST_PIN, (idata != 0)); wait_cpuclock_allnop(5); Pin_L();
+}
+
 
 attr_aligned16 void wait_cpuclock_noploop_4_100(void) { Pin_H(); wait_cpuclock_noploop_4(100); Pin_L(); }
 attr_aligned16 void wait_cpuclock_noploop_5_100(void) { Pin_H(); wait_cpuclock_noploop_5(100); Pin_L(); }
@@ -385,7 +466,19 @@ void matrix_scan_post_user(void) {
     test_timeout = timer_read();
     ATOMIC_BLOCK_FORCEON {
         switch(testnum+WAIT_NUM_BASE) {
-#ifdef LONG_TEST
+#ifdef IODELAY_TEST
+        case 0: outin_0();    break;
+        case 1: outin_1();    break;
+        case 2: outin_2();    break;
+        case 3: outin_3();    break;
+        case 4: outin_4();    break;
+        case 5: outin_5();    break;
+        case 6: outin_6();    break;
+        case 7: outin_7();    break;
+        case 8: outin_8();    break;
+        case 9: break;
+        case 10: break;
+#elif defined(LONG_TEST)
         case 0: wait_test_2();    break;
         case 1: wait_test_16_all(); break;
         case 2: wait_test_16();   break;
@@ -426,7 +519,6 @@ void matrix_scan_post_user(void) {
         case 21: break;
         case 22: break;
         case 23: break;
-
 #elif defined(ALIGN_TEST)
         case 0: wait_test_1(); break;
         case 1: wait_test_20();    dprintf("align  0\n"); break;
