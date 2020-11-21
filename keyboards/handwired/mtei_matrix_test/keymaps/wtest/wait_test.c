@@ -8,7 +8,11 @@
 
 /* clang-format off */
 
-extern void aligned_nop_loop(unsigned int n);
+#if defined(__AVR__)
+#    define ALIGNED_NOP_LOOP_CLOCKS 8
+#    define ALIGNED_NOP_LOOP_CALL_OVER_HEAD 0
+#    define aligned_nop_loop(n) __builtin_avr_delay_cycles(n * (ALIGNED_NOP_LOOP_CLOCKS))
+#endif
 
 #undef  wait_cpuclock
 #define wait_cpuclock(n) wait_cpuclock_noploop(n)
@@ -39,7 +43,7 @@ extern void aligned_nop_loop(unsigned int n);
 #define TEST_INTERVAL 500
 #endif
 
-void keyboard_post_init_user() {
+void keyboard_post_init_user(void) {
     debug_enable = true;
     setPinOutput(WAIT_TEST_PIN);
     writePinLow(WAIT_TEST_PIN);
