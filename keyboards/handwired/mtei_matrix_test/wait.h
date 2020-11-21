@@ -7,38 +7,6 @@
 extern "C" {
 #endif
 
-#ifndef SLOW_CLOCK
-// Proton-C 72MHz
-  #define ALIGNED_NOP_LOOP_CLOCKS 9
-  #define ALIGNED_NOP_LOOP_CALL_OVER_HEAD 8
-#else
-// Proton-C 8MHz (mcuconf.h #define STM32_SW STM32_SW_HSI)
-  #define ALIGNED_NOP_LOOP_CLOCKS 6
-  #define ALIGNED_NOP_LOOP_CALL_OVER_HEAD 4
-#endif
-
-// AVR
-#if defined(__AVR__)
-  #define wait_cpuclock(x) __builtin_avr_delay_cycles(x)
-#endif
-
-// Cortex-M3 or Cortex-M4
-#if defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__)
-  #ifndef __OPTIMIZE__
-    #error "Compiler optimizations disabled; wait_cpuclock() won't work as designed"
-  #endif
-
-extern void aligned_nop_loop(unsigned int n);
-
-#ifdef ALIGNED_NOP_LOOP_CALL_OVER_HEAD
-#    if ALIGNED_NOP_LOOP_CALL_OVER_HEAD < 0 || (ALIGNED_NOP_LOOP_CALL_OVER_HEAD + ALIGNED_NOP_LOOP_CLOCKS) > 24
-#        error Invalid ALIGNED_NOP_LOOP_CALL_OVER_HEAD value
-#    endif
-#else
-#    define ALIGNED_NOP_LOOP_CALL_OVER_HEAD 4
-#endif
-
-
 #define WAIT_EXPANDING_NOP_24(n) do { switch (n) { \
     case 24: asm volatile ("nop"::: "memory"); \
     case 23: asm volatile ("nop"::: "memory"); \
@@ -66,6 +34,32 @@ extern void aligned_nop_loop(unsigned int n);
     case  1: asm volatile ("nop"::: "memory"); \
     case  0: break; \
     } } while(0)
+
+// AVR
+#if defined(__AVR__)
+#    define wait_cpuclock(x)         __builtin_avr_delay_cycles(x)
+#    define wait_cpuclock_noploop(x) __builtin_avr_delay_cycles(x)
+#    define wait_cpuclock_allnop(x)  __builtin_avr_delay_cycles(x)
+#endif
+
+// Cortex-M3 or Cortex-M4
+#if defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__)
+#    ifndef __OPTIMIZE__
+#        error "Compiler optimizations disabled; wait_cpuclock() won't work as designed"
+#    endif
+
+extern void aligned_nop_loop(unsigned int n);
+
+#    ifndef ALIGNED_NOP_LOOP_CLOCKS
+#        define ALIGNED_NOP_LOOP_CLOCKS 6
+#    endif
+#    ifndef ALIGNED_NOP_LOOP_CALL_OVER_HEAD
+#        define ALIGNED_NOP_LOOP_CALL_OVER_HEAD 4
+#    endif
+
+#    if ALIGNED_NOP_LOOP_CLOCKS < 1 || ALIGNED_NOP_LOOP_CALL_OVER_HEAD < 1 || (ALIGNED_NOP_LOOP_CALL_OVER_HEAD + ALIGNED_NOP_LOOP_CLOCKS) > 24
+#        error Invalid ALIGNED_NOP_LOOP_CLOCKS, ALIGNED_NOP_LOOP_CALL_OVER_HEAD value
+#    endif
 
 __attribute__((always_inline))
 static inline void wait_cpuclock_noploop(unsigned int n) {
