@@ -19,11 +19,12 @@
 
 ##  `make TEST=align handwired/mtei_matrix_test/proton_c:wtest:flash`
 
-`wait_cpuclock_noploop()` の展開位置で、結果がかわる事を確認する。
+`wait_cpuclock_noploop(30)` の展開位置で、結果がかわる事を確認する。
 
 ### Proton-C の結果
 * 指定値にたいして、+0,+1,+2,+3,+4 の誤差がありうる。
-  ![DS1Z_QuickPrint104](https://user-images.githubusercontent.com/2170248/99727328-215f8c80-2afb-11eb-909b-bd8b61f83df7.png)
+  ![DS1Z_QuickPrint106](https://user-images.githubusercontent.com/2170248/99894693-aac4b980-2cc9-11eb-9693-4e2111ebd834.png)
+
 
 ##  `make TEST=allnop handwired/mtei_matrix_test/proton_c:wtest:flash`
 
@@ -41,7 +42,12 @@
 
 ##  `make TEST=iodelay handwired/mtei_matrix_test/proton_c:wtest:flash`
 
-入力の変化に、どれくらいの遅れを見込んでおけるか確認する。
+入力の変化に、どれくらいの遅れを見込んでおけばいいかを確認する。
+
+### Proton-C の結果
+出力後 2 nop おいてから入力する。
+
+  ![DS1Z_QuickPrint107](https://user-images.githubusercontent.com/2170248/99894767-d5167700-2cc9-11eb-806e-f8fb05b5558e.png)
 
 ## `make TEST=slow,XXX handwired/mtei_matrix_test/proton_c:wtest:flash`
 
