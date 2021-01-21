@@ -90,7 +90,26 @@ static void unselect_rows(void) {
     }
 }
 
+#    ifdef __OPTIMIZE__
+static void test_for_macro_consistency_at_compile_time(void) {
+    /* If the definitions of MATRIX_ROWS and MATRIX_ROW_PINS
+     * and MATRIX_COLS and MATRIX_COL_PINS are consistent,
+     * compiler optimization will empty this function. */
+    pin_t row_pins_test[] = MATRIX_ROW_PINS;
+    pin_t col_pins_test[] = MATRIX_COL_PINS;
+
+    if (sizeof(row_pins) != sizeof(row_pins_test) ||
+        sizeof(col_pins) != sizeof(col_pins_test)) {
+        extern void MATRIX_ROWS_OR_COLS_IS_INVALID(void);
+        MATRIX_ROWS_OR_COLS_IS_INVALID();
+    }
+}
+#    else
+#        define test_for_macro_consistency_at_compile_time()
+#    endif
+
 static void init_pins(void) {
+    test_for_macro_consistency_at_compile_time();
     unselect_rows();
     for (uint8_t x = 0; x < MATRIX_COLS; x++) {
         setPinInputHigh_atomic(col_pins[x]);
@@ -137,7 +156,26 @@ static void unselect_cols(void) {
     }
 }
 
+#    ifdef __OPTIMIZE__
+static void test_for_macro_consistency_at_compile_time(void) {
+    /* If the definitions of MATRIX_ROWS and MATRIX_ROW_PINS
+     * and MATRIX_COLS and MATRIX_COL_PINS are consistent,
+     * compiler optimization will empty this function. */
+    pin_t row_pins_test[] = MATRIX_ROW_PINS;
+    pin_t col_pins_test[] = MATRIX_COL_PINS;
+
+    if (sizeof(row_pins) != sizeof(row_pins_test) ||
+        sizeof(col_pins) != sizeof(col_pins_test)) {
+        extern void MATRIX_ROWS_OR_COLS_IS_INVALID(void);
+        MATRIX_ROWS_OR_COLS_IS_INVALID();
+    }
+}
+#    else
+#        define test_for_macro_consistency_at_compile_time()
+#    endif
+
 static void init_pins(void) {
+    test_for_macro_consistency_at_compile_time();
     unselect_cols();
     for (uint8_t x = 0; x < MATRIX_ROWS; x++) {
         setPinInputHigh_atomic(row_pins[x]);
