@@ -21,7 +21,4 @@ RGBLIGHT_ENABLE = no        # Enable keyboard RGB underglow
 BLUETOOTH_ENABLE = no       # Enable Bluetooth
 AUDIO_ENABLE = no           # Audio output
 
-ifeq ($(MATRIX_SCAN),yes)
-  OPT_DEFS +=  -DDEBUG_MATRIX_SCAN_RATE
-  CONSOLE_ENABLE = yes
-endif
+include $(KEYBOARD_LOCAL_FEATURES_MK)
