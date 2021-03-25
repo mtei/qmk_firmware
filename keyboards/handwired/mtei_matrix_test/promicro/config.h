@@ -47,6 +47,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* COL2ROW, ROW2COL */
 #define DIODE_DIRECTION COL2ROW
 
+#define MATRIX_OUT_PORTS \
+    (Port_D, 0, D0), \
+    (Port_C, 0, C0), \
+    (Port_E, 0, E0), \
+    (Port_B, 0, B0)
+#define MATRIX_OUT_PINS  \
+    (0, Port_D, 4), \
+    (1, Port_C, 6), \
+    (2, Port_D, 7), \
+    (3, Port_E, 6), \
+    (4, Port_B, 4), \
+    (5, Port_B, 5)
+#define MATRIX_IN_PORTS \
+    (Port_F, 0, F0), \
+    (Port_B, 0, B0)
+#define MATRIX_IN_PINS \
+    (0, Port_F, 4), \
+    (1, Port_F, 5), \
+    (2, Port_F, 6), \
+    (3, Port_F, 7), \
+    (4, Port_B, 1), \
+    (5, Port_B, 3)
+
 //#define RGB_DI_PIN D3
 //#ifdef RGB_DI_PIN
 //#    define RGBLED_NUM 16
