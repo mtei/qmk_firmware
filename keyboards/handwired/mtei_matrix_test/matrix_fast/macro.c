@@ -1,4 +1,6 @@
 // avr-gcc -E -I. macro.c
+// clang-format off
+
 #ifndef MATRIX_OUT_PORTS
 #define MATRIX_OUT_PORTS \
     (Port_D, 0, D0), \
@@ -24,7 +26,14 @@
     (5, Port_B, 3)
 #endif
 
-#define LOCAL
+#define LOCAL // static
+
+#ifndef setMatrixOutput_writeLow
+#    define setMatrixOutput_writeLow(dev, port, bit) setPortBitOutput_writeLow(port, bit)
+#endif
+#ifndef setMatrixInputHigh
+#    define setMatrixInputHigh(dev, port, bit) setPortBitInputHigh_atomic(port, bit)
+#endif
 
 #include "cpp_map.h"
 
@@ -79,13 +88,12 @@ const port_st oport_list[NUM_OF_OUTPUT_PORTS] = {
     MAP(OUTPUT_PORTS_LIST_ELEMENT, MATRIX_OUT_PORTS)
 };
 
+
 #define _SELECT_OUTPUT_PIN(index, pname, bit) \
     case opin_index_##index: \
-    if (oport_list[oport_index_##pname].device == 0) {                        \
-        setPortBitOutput_writeLow(oport_list[oport_index_##pname].port, bit); \
-    } else {                                                                  \
-        select_output_extr(oport_index_##pname, bit);                         \
-    } break;
+    setMatrixOutput_writeLow(oport_list[oport_index_##pname].device,     \
+                             oport_list[oport_index_##pname].port, bit); \
+    break;
 #define SELECT_OUTPUT_PIN(x) _SELECT_OUTPUT_PIN x
 LOCAL
 void select_output(uint8_t out_index) {
@@ -96,11 +104,8 @@ void select_output(uint8_t out_index) {
 
 #define _UNSELECT_OUTPUT_PIN(index, pname, bit) \
     case opin_index_##index: \
-    if (oport_list[oport_index_##pname].device == 0) {                     \
-        setPortBitInputHigh_atomic(oport_list[oport_index_##pname].port, bit); \
-    } else {                                                               \
-        unselect_output_extr(oport_index_##pname, bit);                    \
-    } break;
+      setMatrixInputHigh(oport_list[oport_index_##pname].device, oport_list[oport_index_##pname].port, bit); \
+    break;
 #define UNSELECT_OUTPUT_PIN(x) _UNSELECT_OUTPUT_PIN x
 LOCAL
 void unselect_output(uint8_t out_index) {

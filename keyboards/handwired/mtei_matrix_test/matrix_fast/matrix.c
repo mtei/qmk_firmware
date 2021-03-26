@@ -14,6 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+// clang-format off
 #include <stdint.h>
 #include <stdbool.h>
 #include "gpio_extr.h"
@@ -23,11 +24,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "quantum.h"
 
 #ifndef MATRIX_DEBUG_PIN
-#  define MATRIX_DEBUG_PIN_INIT()
-#  define MATRIX_DEBUG_SCAN_START()
-#  define MATRIX_DEBUG_SCAN_END()
-#  define MATRIX_DEBUG_DELAY_START()
-#  define MATRIX_DEBUG_DELAY_END()
+#    define MATRIX_DEBUG_PIN_INIT()
+#    define MATRIX_DEBUG_SCAN_START()
+#    define MATRIX_DEBUG_SCAN_END()
+#    define MATRIX_DEBUG_DELAY_START()
+#    define MATRIX_DEBUG_DELAY_END()
 #endif
 
 typedef uint16_t     port_width_t;
@@ -64,12 +65,14 @@ bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row) {
 
     // Unselect row
     unselect_output(current_row);
-    MATRIX_DEBUG_DELAY_START();
-    wait_unselect_done();
-    MATRIX_DEBUG_DELAY_END();
 
     // Build row
     current_row_value = build_matrix_line(port_buffer);
+
+    // Wait signal raise up
+    MATRIX_DEBUG_DELAY_START();
+    wait_unselect_done();
+    MATRIX_DEBUG_DELAY_END();
 
     // If the row has changed, store the row and return the changed flag.
     if (current_matrix[current_row] != current_row_value) {
