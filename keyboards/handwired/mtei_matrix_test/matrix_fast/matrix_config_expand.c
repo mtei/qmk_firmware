@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    define setMatrixOutput_writeLow(dev, port, bit) setPortBitOutput_writeLow(port, bit)
 #endif
 #ifndef readMatrixPort
-#    define readMatrixPort(dev, port) ~readPort(port) /* invert active-low */
+#    define readMatrixPort(dev, port) readPort(port)
 #endif
 #ifndef getMatrixInputMaskBit
 #    define getMatrixInputMaskBit(dev, bit) _BV((bit)&0xF)
@@ -145,7 +145,7 @@ void read_all_input_ports(port_width_t buffer[NUM_OF_INPUT_PORTS], bool wait_uns
 }
 
 #define _MASK_INPUT(name, dev, port) \
-    mask |= (buffer[iport_index_##name] &  iport_mask[iport_index_##name]);
+    mask |= ((~buffer[iport_index_##name]) & iport_mask[iport_index_##name]);
 #define MASK_INPUT(x) _MASK_INPUT x
 LOCAL_FUNC inline ALWAYS_INLINE void wait_unselect_done(void);
 LOCAL_FUNC
@@ -160,7 +160,7 @@ void wait_unselect_done(void) {
 }
 
 #define _BUILD_INPUT_PORT(index, pname, bit) \
-    result |= (buffer[iport_index_##pname] & _BV(bit)) ? _BV(ipin_index_##index) : 0;
+    result |= (buffer[iport_index_##pname] & _BV(bit)) ? 0 : _BV(ipin_index_##index);
 #define BUILD_INPUT_PORT(x) _BUILD_INPUT_PORT x
 LOCAL_FUNC inline ALWAYS_INLINE matrix_line_width_t build_matrix_line(port_width_t buffer[NUM_OF_INPUT_PORTS]);
 LOCAL_FUNC
