@@ -53,7 +53,7 @@ extern matrix_row_t matrix[MATRIX_ROWS];      // debounced values
 #define setPortBitInputHigh_atomic(port, bit) \
     ATOMIC_BLOCK_FORCEON { setPortBitInputHigh(port, bit); }
 
-#include "macro.c"
+#include "matrix_config_expand.c"
 
 LOCAL_FUNC inline ALWAYS_INLINE bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row);
 LOCAL_FUNC bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row) {
