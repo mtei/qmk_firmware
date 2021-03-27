@@ -26,6 +26,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ALWAYS_INLINE __attribute__((always_inline))
 #define NO_INLINE     __attribute__((noinline))
 
+#ifndef _BV
+#    define _BV(bit) (1 << (bit))
+#endif
+
 #ifndef MATRIX_DEBUG_PIN
 #    define MATRIX_DEBUG_PIN_INIT()
 #    define MATRIX_DEBUG_SCAN_START()
@@ -49,11 +53,30 @@ extern matrix_row_t raw_matrix[MATRIX_ROWS];  // raw values
 extern matrix_row_t matrix[MATRIX_ROWS];      // debounced values
 
 #define setPortBitOutput_writeLow(port, bit) \
-    ATOMIC_BLOCK_FORCEON { setPortBitOutput(port, bit); writePortBitLow(port, bit); }
+    do { setPortBitOutput(port, bit); writePortBitLow(port, bit); } while(0)
 #define setPortBitInputHigh_atomic(port, bit) \
-    ATOMIC_BLOCK_FORCEON { setPortBitInputHigh(port, bit); }
+    do { setPortBitInputHigh(port, bit); } while(0)
 
 #include "matrix_config_expand.c"
+
+LOCAL_FUNC
+void unselect_output(uint8_t out_index) {
+    unselect_output_inline(out_index);
+}
+
+LOCAL_FUNC
+void init_output_ports(void) {
+    for (int i = 0; i < END_opin_index; i++) {
+        unselect_output(i);
+    }
+}
+
+LOCAL_FUNC
+void init_all_ports(void) {
+    init_input_ports();
+    init_output_ports();
+    init_mask();
+}
 
 LOCAL_FUNC inline ALWAYS_INLINE bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row);
 LOCAL_FUNC bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row) {
@@ -61,23 +84,27 @@ LOCAL_FUNC bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_
     matrix_row_t current_row_value = 0;
     port_width_t port_buffer[NUM_OF_INPUT_PORTS];
 
-    // Select row
-    select_output(current_row);
-    matrix_output_select_delay();
+    ATOMIC_BLOCK_FORCEON {
+        // Select row
+        select_output(current_row);
+        matrix_output_select_delay();
 
-    // Read ports
-    read_all_input_ports(port_buffer, true);
+        // Read ports
+        read_all_input_ports(port_buffer, false);
 
-    // Unselect row
-    unselect_output(current_row);
+        // Unselect row
+        unselect_output_inline(current_row);
+    }
 
     // Build row
     current_row_value = build_matrix_line(port_buffer);
 
     // Wait signal raise up
-    MATRIX_DEBUG_DELAY_START();
-    wait_unselect_done();
-    MATRIX_DEBUG_DELAY_END();
+    if (current_row_value) {
+        MATRIX_DEBUG_DELAY_START();
+        wait_unselect_done();
+        MATRIX_DEBUG_DELAY_END();
+    }
 
     // If the row has changed, store the row and return the changed flag.
     if (current_matrix[current_row] != current_row_value) {

@@ -1,30 +1,25 @@
-// avr-gcc -DDEBUG_MACRO_EXPAND -E -C -I. macro.c
+/*
+Copyright 2021 mtei
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 // clang-format off
 
-#ifdef DEBUG_MACRO_EXPAND
-/* sample config for debug macro expand */
-#define MATRIX_OUT_PORTS \
-    (Port_D, 0, D0), \
-    (Port_C, 0, C0), \
-    (Port_E, 0, E0), \
-    (Port_B, 0, B0)
-#define MATRIX_OUT_PINS  \
-    (0, Port_D, 4), \
-    (1, Port_C, 6), \
-    (2, Port_D, 7), \
-    (3, Port_E, 6), \
-    (4, Port_B, 4), \
-    (5, Port_B, 5)
-#define MATRIX_IN_PORTS \
-    (Port_F, 0, F0), \
-    (Port_B, 0, B0)
-#define MATRIX_IN_PINS \
-    (0, Port_F, 4), \
-    (1, Port_F, 5), \
-    (2, Port_F, 6), \
-    (3, Port_F, 7), \
-    (4, Port_B, 1), \
-    (5, Port_B, 3)
+#ifdef DEBUG_MATRIX_CONFIG
+// config expand debug
+//   avr-gcc -DDEBUG_MATRIX_CONFIG=\"config.h\" -E -C -I. matrix_config_expand.c
+#    include DEBUG_MATRIX_CONFIG
 #endif
 
 #ifndef setMatrixInputHigh
@@ -97,6 +92,7 @@ const port_st oport_list[NUM_OF_OUTPUT_PORTS] = {
                                  oport_list[oport_index_##pname].port, bit); \
     break;
 #define SELECT_OUTPUT_PIN(x) _SELECT_OUTPUT_PIN x
+LOCAL_FUNC inline ALWAYS_INLINE void select_output(uint8_t out_index);
 LOCAL_FUNC
 void select_output(uint8_t out_index) {
     switch (out_index) {
@@ -110,8 +106,9 @@ void select_output(uint8_t out_index) {
                              oport_list[oport_index_##pname].port, bit); \
     break;
 #define UNSELECT_OUTPUT_PIN(x) _UNSELECT_OUTPUT_PIN x
+LOCAL_FUNC inline ALWAYS_INLINE void unselect_output_inline(uint8_t out_index);
 LOCAL_FUNC
-void unselect_output(uint8_t out_index) {
+void unselect_output_inline(uint8_t out_index) {
     switch (out_index) {
         MAP(UNSELECT_OUTPUT_PIN, MATRIX_OUT_PINS)
     }
@@ -126,13 +123,6 @@ void init_input_ports(void) {
     MAP(INIT_INPUT_PIN, MATRIX_IN_PINS)
 }
 
-LOCAL_FUNC
-void init_output_ports(void) {
-    for (int i = 0; i < END_opin_index; i++) {
-        unselect_output(i);
-    }
-}
-
 #define _INIT_MASK(index, pname, bit) \
     iport_mask[iport_index_##pname] |= getMatrixInputMaskBit(iport_list[iport_index_##pname].device, bit);
 #define INIT_MASK(x)  _INIT_MASK x
@@ -144,31 +134,26 @@ void init_mask(void) {
     MAP(INIT_MASK, MATRIX_IN_PINS)
 }
 
-LOCAL_FUNC
-void init_all_ports(void) {
-    init_input_ports();
-    init_output_ports();
-    init_mask();
-}
-
-
 #define _READ_INPUT_PORT(name, dev, port) \
     buffer[iport_index_##name] = readMatrixPort(dev, port);
 #define READ_INPUT_PORT(x) _READ_INPUT_PORT x
 LOCAL_FUNC
-void read_all_input_ports(port_width_t buffer[NUM_OF_INPUT_PORTS], bool whole) {
+inline ALWAYS_INLINE void read_all_input_ports(port_width_t buffer[NUM_OF_INPUT_PORTS], bool wait_unselect);
+LOCAL_FUNC
+void read_all_input_ports(port_width_t buffer[NUM_OF_INPUT_PORTS], bool wait_unselect) {
     MAP(READ_INPUT_PORT, MATRIX_IN_PORTS)
 }
 
 #define _MASK_INPUT(name, dev, port) \
     mask |= (buffer[iport_index_##name] &  iport_mask[iport_index_##name]);
 #define MASK_INPUT(x) _MASK_INPUT x
+LOCAL_FUNC inline ALWAYS_INLINE void wait_unselect_done(void);
 LOCAL_FUNC
 void wait_unselect_done(void) {
     port_width_t mask;
     port_width_t buffer[NUM_OF_INPUT_PORTS];
     do {
-        read_all_input_ports(buffer, false);
+        read_all_input_ports(buffer, true);
         mask = 0;
         MAP(MASK_INPUT, MATRIX_IN_PORTS);
     } while (mask != 0);
@@ -177,6 +162,7 @@ void wait_unselect_done(void) {
 #define _BUILD_INPUT_PORT(index, pname, bit) \
     result |= (buffer[iport_index_##pname] & _BV(bit)) ? _BV(ipin_index_##index) : 0;
 #define BUILD_INPUT_PORT(x) _BUILD_INPUT_PORT x
+LOCAL_FUNC inline ALWAYS_INLINE matrix_line_width_t build_matrix_line(port_width_t buffer[NUM_OF_INPUT_PORTS]);
 LOCAL_FUNC
 matrix_line_width_t build_matrix_line(port_width_t buffer[NUM_OF_INPUT_PORTS]) {
     matrix_line_width_t result = 0;
