@@ -23,8 +23,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "debounce.h"
 #include "quantum.h"
 
-#define ALWAYS_INLINE __attribute__((always_inline))
+#define ALWAYS_INLINE inline __attribute__((always_inline))
 #define NO_INLINE     __attribute__((noinline))
+#define LOCAL_FUNC static
+#define LOCAL_DATA static
 
 #ifndef _BV
 #    define _BV(bit) (1 << (bit))
@@ -44,9 +46,6 @@ typedef struct _port_st {
     int device;
     pin_t port;
 } port_st;
-
-#define LOCAL_FUNC static
-#define LOCAL_DATA static
 
 /* matrix state(1:on, 0:off) */
 extern matrix_row_t raw_matrix[MATRIX_ROWS];  // raw values
@@ -78,7 +77,7 @@ void init_all_ports(void) {
     init_mask();
 }
 
-LOCAL_FUNC inline ALWAYS_INLINE bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row);
+LOCAL_FUNC ALWAYS_INLINE bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row);
 LOCAL_FUNC bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row) {
     // Start with a clear matrix row
     matrix_row_t current_row_value = 0;

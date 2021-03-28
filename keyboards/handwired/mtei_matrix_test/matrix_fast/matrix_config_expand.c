@@ -92,7 +92,7 @@ const port_st oport_list[NUM_OF_OUTPUT_PORTS] = {
                                  oport_list[oport_index_##pname].port, bit); \
     break;
 #define SELECT_OUTPUT_PIN(x) _SELECT_OUTPUT_PIN x
-LOCAL_FUNC inline ALWAYS_INLINE void select_output(uint8_t out_index);
+LOCAL_FUNC ALWAYS_INLINE void select_output(uint8_t out_index);
 LOCAL_FUNC
 void select_output(uint8_t out_index) {
     switch (out_index) {
@@ -106,7 +106,7 @@ void select_output(uint8_t out_index) {
                              oport_list[oport_index_##pname].port, bit); \
     break;
 #define UNSELECT_OUTPUT_PIN(x) _UNSELECT_OUTPUT_PIN x
-LOCAL_FUNC inline ALWAYS_INLINE void unselect_output_inline(uint8_t out_index);
+LOCAL_FUNC ALWAYS_INLINE void unselect_output_inline(uint8_t out_index);
 LOCAL_FUNC
 void unselect_output_inline(uint8_t out_index) {
     switch (out_index) {
@@ -138,7 +138,7 @@ void init_mask(void) {
     buffer[iport_index_##name] = readMatrixPort(dev, port);
 #define READ_INPUT_PORT(x) _READ_INPUT_PORT x
 LOCAL_FUNC
-inline ALWAYS_INLINE void read_all_input_ports(port_width_t buffer[NUM_OF_INPUT_PORTS], bool wait_unselect);
+ALWAYS_INLINE void read_all_input_ports(port_width_t buffer[NUM_OF_INPUT_PORTS], bool wait_unselect);
 LOCAL_FUNC
 void read_all_input_ports(port_width_t buffer[NUM_OF_INPUT_PORTS], bool wait_unselect) {
     MAP(READ_INPUT_PORT, MATRIX_IN_PORTS)
@@ -147,7 +147,7 @@ void read_all_input_ports(port_width_t buffer[NUM_OF_INPUT_PORTS], bool wait_uns
 #define _MASK_INPUT(name, dev, port) \
     mask |= ((~buffer[iport_index_##name]) & iport_mask[iport_index_##name]);
 #define MASK_INPUT(x) _MASK_INPUT x
-LOCAL_FUNC inline ALWAYS_INLINE void wait_unselect_done(void);
+LOCAL_FUNC ALWAYS_INLINE void wait_unselect_done(void);
 LOCAL_FUNC
 void wait_unselect_done(void) {
     port_width_t mask;
@@ -162,7 +162,7 @@ void wait_unselect_done(void) {
 #define _BUILD_INPUT_PORT(index, pname, bit) \
     result |= (buffer[iport_index_##pname] & _BV(bit)) ? 0 : _BV(ipin_index_##index);
 #define BUILD_INPUT_PORT(x) _BUILD_INPUT_PORT x
-LOCAL_FUNC inline ALWAYS_INLINE matrix_line_width_t build_matrix_line(port_width_t buffer[NUM_OF_INPUT_PORTS]);
+LOCAL_FUNC ALWAYS_INLINE matrix_line_width_t build_matrix_line(port_width_t buffer[NUM_OF_INPUT_PORTS]);
 LOCAL_FUNC
 matrix_line_width_t build_matrix_line(port_width_t buffer[NUM_OF_INPUT_PORTS]) {
     matrix_line_width_t result = 0;
