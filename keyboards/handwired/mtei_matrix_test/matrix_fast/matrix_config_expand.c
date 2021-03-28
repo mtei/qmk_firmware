@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef DEBUG_MATRIX_CONFIG
 // config expand debug
-//   avr-gcc -DDEBUG_MATRIX_CONFIG=\"config.h\" -E -C -I. matrix_config_expand.c
+//   avr-gcc -DDEBUG_MATRIX_CONFIG=\"test_config.h\" -E -C -I. matrix_config_expand.c
 #    include DEBUG_MATRIX_CONFIG
 #endif
 
