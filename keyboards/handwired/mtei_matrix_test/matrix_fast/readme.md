@@ -1,12 +1,12 @@
 # high speed matrix.c
 
 ## ToDo list
-[x] support Pro Micro (2021-3-27)
-[ ] support Proton-C
-[ ] support DIRECT_PINS
-[ ] support DIODE_DIRECTION == ROW2COL
-[ ] support I/O expander (MCP23018)
-[ ] support MCU & I/O expander (MCP23018) mixture like ErgoDox
+- [x] support Pro Micro (2021-3-27)
+- [ ] support Proton-C
+- [ ] support DIRECT_PINS
+- [ ] support DIODE_DIRECTION == ROW2COL
+- [ ] support I/O expander (MCP23018)
+- [ ] support MCU & I/O expander (MCP23018) mixture like ErgoDox
 
 ## Configuration
 
