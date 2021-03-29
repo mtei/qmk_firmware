@@ -32,6 +32,9 @@ ifneq ($(strip $(TEST)),)
     ifeq ($(strip $1),input_pin_delay)
 	INPUT_PIN_DELAY = yes
     endif
+    ifeq ($(strip $1),adaptive_delay)
+	ADAPTIVE_DELAY = yes
+    endif
     ifeq ($(strip $1),allways_delay)
         ALLWAYS_DELAY = yes
     endif
@@ -83,8 +86,13 @@ ifeq ($(strip $(INPUT_PIN_DELAY)),yes)
     DEBUG_CONFIG = yes
 endif
 
+ifeq ($(strip $(ADAPTIVE_DELAY)),yes)
+    OPT_DEFS += -DDEBUG_CONFIG -DMATRIX_IO_DELAY_ADAPTIVE
+    DEBUG_CONFIG = yes
+endif
+
 ifeq ($(strip $(ALLWAYS_DELAY)),yes)
-    OPT_DEFS += -DDEBUG_CONFIG -DALLWAYS_UNSELECT_DELAY
+    OPT_DEFS += -DDEBUG_CONFIG -DMATRIX_IO_DELAY_ALLWAYS
     DEBUG_CONFIG = yes
 endif
 

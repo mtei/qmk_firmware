@@ -21,6 +21,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "debounce.h"
 #include "quantum.h"
 
+#ifndef MATRIX_IO_DELAY_ALLWAYS
+#    define MATRIX_IO_DELAY_ALLWAYS 0
+#endif
+
 #ifndef MATRIX_DEBUG_PIN
 #    define MATRIX_DEBUG_PIN_INIT()
 #    define MATRIX_DEBUG_SCAN_START()
@@ -138,11 +142,24 @@ static bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row)
     MATRIX_DEBUG_DELAY_START();
 #ifdef LOOK_INPUT_PIN_DELAY
     if (last_pin != NO_PIN) {
-        while (readPin(last_pin) == 0) {}
+        while (readPin(last_pin) == 0) {
+            MATRIX_DEBUG_DELAY_END();
+            MATRIX_DEBUG_DELAY_START();
+        }
     }
 #endif
-    if (ALLWAYS_UNSELECT_DELAY_FLAG || current_row + 1 < MATRIX_ROWS) {
-        matrix_output_unselect_delay();  // wait for row signal to go HIGH
+#ifdef MATRIX_IO_DELAY_ADAPTIVE
+    if (current_row_value) {  // wait for col signal to go HIGH
+        for (uint8_t col_index = 0; col_index < MATRIX_COLS; col_index++) {
+            MATRIX_DEBUG_DELAY_END();
+            MATRIX_DEBUG_GAP();
+            MATRIX_DEBUG_DELAY_START();
+            while (readPin(col_pins[col_index]) == 0) {}
+        }
+    }
+#endif
+    if (MATRIX_IO_DELAY_ALLWAYS || current_row + 1 < MATRIX_ROWS) {
+        matrix_output_unselect_delay();  // wait for col signal to go HIGH
     }
     MATRIX_DEBUG_DELAY_END();
 
