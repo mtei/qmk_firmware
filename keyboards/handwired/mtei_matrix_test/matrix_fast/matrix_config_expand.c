@@ -22,15 +22,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    include DEBUG_MATRIX_CONFIG
 #endif
 
-#ifndef setMatrixInputHigh
-#    define setMatrixInputHigh(dev, port, bit) setPortBitInputHigh_atomic(port, bit)
+#ifdef MATRIX_GPIO_NEED_SEPARATE_ATOMIC
+#    ifndef setMatrixInputHigh
+#        define setMatrixInputHigh(dev, port, bit) setPortBitInputHigh_atomic(port, bit)
+#    endif
+#    ifndef setMatrixOutput_writeHighZ
+#        define setMatrixOutput_writeHighZ(dev, port, bit) setPortBitInputHigh_atomic(port, bit)
+#    endif
+#    ifndef setMatrixOutput_writeLow
+#        define setMatrixOutput_writeLow(dev, port, bit) setPortBitOutput_writeLow_atomic(port, bit)
+#    endif
+#else
+#    ifndef setMatrixInputHigh
+#        define setMatrixInputHigh(dev, port, bit) setPortBitInputHigh(port, bit)
+#    endif
+#    ifndef setMatrixOutput_writeHighZ
+#        define setMatrixOutput_writeHighZ(dev, port, bit) setPortBitInputHigh(port, bit)
+#    endif
+#    ifndef setMatrixOutput_writeLow
+#        define setMatrixOutput_writeLow(dev, port, bit) setPortBitOutput_writeLow(port, bit)
+#    endif
 #endif
-#ifndef setMatrixOutput_writeHighZ
-#    define setMatrixOutput_writeHighZ(dev, port, bit) setPortBitInputHigh_atomic(port, bit)
-#endif
-#ifndef setMatrixOutput_writeLow
-#    define setMatrixOutput_writeLow(dev, port, bit) setPortBitOutput_writeLow(port, bit)
-#endif
+
 #ifndef readMatrixPort
 #    define readMatrixPort(dev, port) readPort(port)
 #endif
@@ -103,7 +116,7 @@ void select_output(uint8_t out_index) {
 #define _UNSELECT_OUTPUT_PIN(index, pname, bit) \
     case opin_index_##index: \
         setMatrixOutput_writeHighZ(oport_list[oport_index_##pname].device,     \
-                             oport_list[oport_index_##pname].port, bit); \
+                                   oport_list[oport_index_##pname].port, bit); \
     break;
 #define UNSELECT_OUTPUT_PIN(x) _UNSELECT_OUTPUT_PIN x
 LOCAL_FUNC ALWAYS_INLINE void unselect_output_inline(uint8_t out_index);
@@ -115,7 +128,7 @@ void unselect_output_inline(uint8_t out_index) {
 }
 
 #define _INIT_INPUT_PIN(index, pname, bit) \
-    setMatrixInputHigh(iport_list[iport_index_##pname].device, \
+    setMatrixInputHigh(iport_list[iport_index_##pname].device,    \
                        iport_list[iport_index_##pname].port, bit);
 #define INIT_INPUT_PIN(x) _INIT_INPUT_PIN x
 LOCAL_FUNC

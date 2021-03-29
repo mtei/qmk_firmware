@@ -53,10 +53,16 @@ extern matrix_row_t matrix[MATRIX_ROWS];      // debounced values
 
 #define setPortBitOutput_writeLow(port, bit) \
     do { setPortBitOutput(port, bit); writePortBitLow(port, bit); } while(0)
+#define setPortBitOutput_writeLow_atomic(port, bit) \
+    do { ATOMIC_BLOCK_FORCEON { setPortBitOutput_writeLow(port, bit); } } while(0)
 #define setPortBitInputHigh_atomic(port, bit) \
-    do { setPortBitInputHigh(port, bit); } while(0)
+    do { ATOMIC_BLOCK_FORCEON { setPortBitInputHigh(port, bit); } } while(0)
 
-#include "matrix_config_expand.c"
+#if defined(MATRIX_IN_PORTS) && defined(MATRIX_IN_PINS)
+#   include "matrix_config_expand.c"
+#else
+#   error matrix.c need defined MATRIX_IN_PORTS and MATRIX_IN_PINS
+#endif
 
 LOCAL_FUNC
 void unselect_output(uint8_t out_index) {
@@ -83,6 +89,17 @@ LOCAL_FUNC bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_
     matrix_row_t current_row_value = 0;
     port_width_t port_buffer[NUM_OF_INPUT_PORTS];
 
+#ifdef MATRIX_GPIO_NEED_SEPARATE_ATOMIC
+    // Select row
+    select_output(current_row);
+    matrix_output_select_delay();
+
+    // Read ports
+    read_all_input_ports(port_buffer, false);
+
+    // Unselect row
+    unselect_output_inline(current_row);
+#else
     ATOMIC_BLOCK_FORCEON {
         // Select row
         select_output(current_row);
@@ -94,6 +111,7 @@ LOCAL_FUNC bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_
         // Unselect row
         unselect_output_inline(current_row);
     }
+#endif
 
     // Build row
     current_row_value = build_matrix_line(port_buffer);
