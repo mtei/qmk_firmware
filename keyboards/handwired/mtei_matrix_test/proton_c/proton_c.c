@@ -29,3 +29,7 @@ void matrix_scan_kb(void) {
     matrix_scan_user(); 
     matrix_scan_post_user();
 }
+
+#if defined(MATRIX_IO_DELAY) && MATRIX_IO_DELAY == 0
+void matrix_output_unselect_delay(void) { }
+#endif
