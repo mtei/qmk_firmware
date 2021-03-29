@@ -167,8 +167,10 @@ void wait_unselect_done(void) {
     port_width_t buffer[NUM_OF_INPUT_PORTS];
     do {
         read_all_input_ports(buffer, true);
+        MATRIX_DEBUG_DELAY_END();
         mask = 0;
         MAP(MASK_INPUT, MATRIX_IN_PORTS);
+        MATRIX_DEBUG_DELAY_START();
     } while (mask != 0);
 }
 
