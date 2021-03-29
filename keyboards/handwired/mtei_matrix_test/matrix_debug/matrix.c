@@ -22,11 +22,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "quantum.h"
 
 #ifndef MATRIX_DEBUG_PIN
-#  define MATRIX_DEBUG_PIN_INIT()
-#  define MATRIX_DEBUG_SCAN_START()
-#  define MATRIX_DEBUG_SCAN_END()
-#  define MATRIX_DEBUG_DELAY_START()
-#  define MATRIX_DEBUG_DELAY_END()
+#    define MATRIX_DEBUG_PIN_INIT()
+#    define MATRIX_DEBUG_SCAN_START()
+#    define MATRIX_DEBUG_SCAN_END()
+#    define MATRIX_DEBUG_DELAY_START()
+#    define MATRIX_DEBUG_DELAY_END()
+#    define MATRIX_DEBUG_GAP()
+#else
+#    define MATRIX_DEBUG_GAP()  asm volatile("nop \n nop":::"memory")
 #endif
 
 #ifdef ALLWAYS_UNSELECT_DELAY
@@ -248,7 +251,10 @@ uint8_t matrix_scan(void) {
 #endif
     MATRIX_DEBUG_SCAN_END();
 
+    MATRIX_DEBUG_GAP();
+    MATRIX_DEBUG_SCAN_START();
     debounce(raw_matrix, matrix, MATRIX_ROWS, changed);
+    MATRIX_DEBUG_SCAN_END();
 
     matrix_scan_quantum();
     return (uint8_t)changed;
