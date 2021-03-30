@@ -5,8 +5,8 @@ make TEST=<options>  handwired/mtei_matrix_test/{promicro|proton_c}:default:flas
 ```
 
 ## Options:
-* `mdelay0`,.. `mdelay5`, `mdelay10`
-  `#define MATRIX_IO_DELAY 0,1,2,3,4,5, 10`
+* `mdelay0`,.. `mdelay5`, `mdelay10`, `mdelay20`, `mdelay30`
+  `#define MATRIX_IO_DELAY 0,1,2,3,4,5, 10, 20, 30`
 * `adaptive_delay`
   `#define MATRIX_IO_DELAY_ADAPTIVE`
 * `allways_delay`

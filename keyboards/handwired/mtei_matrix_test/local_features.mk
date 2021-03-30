@@ -1,12 +1,15 @@
 ifneq ($(strip $(TEST)),)
   define KEYBOARD_OPTION_PARSE
-    # parse 'consle', 'debug', 'mdelay0', 'mdelay1', 'mdelay5', 'mdelay10', 'mdelay30', 'scan', 'matrix_debug', 'matrix_scan', 'input_pin_delay'
+    # parse 'consle', 'debug', 'mdelay-1', 'mdelay0', 'mdelay1', 'mdelay5', 'mdelay10', 'mdelay20', 'mdelay30', 'scan', 'matrix_debug', 'matrix_scan', 'input_pin_delay'
     $(if $(SHOW_PARCE),$(info parse .$1.))  #for debug  'make SHOW_PARCE=y ...'
     ifeq ($(strip $1),console)
         CONSOLE_ENABLE = yes
     endif
     ifeq ($(strip $1),debug)
         DEBUG_CONFIG = yes
+    endif
+    ifeq ($(strip $1),mdelay-1)
+        MDELAY = -1
     endif
     ifeq ($(strip $1),mdelay0)
         MDELAY = 0
@@ -27,6 +30,9 @@ ifneq ($(strip $(TEST)),)
         MDELAY = 5
     endif
     ifeq ($(strip $1),mdelay10)
+        MDELAY = 10
+    endif
+    ifeq ($(strip $1),mdelay20)
         MDELAY = 10
     endif
     ifeq ($(strip $1),mdelay30)
