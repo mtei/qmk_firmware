@@ -266,13 +266,14 @@ uint8_t matrix_scan(void) {
         changed |= read_rows_on_col(raw_matrix, current_col);
     }
 #endif
-    MATRIX_DEBUG_SCAN_END();
+    MATRIX_DEBUG_SCAN_END(); MATRIX_DEBUG_GAP();
 
-    MATRIX_DEBUG_GAP();
     MATRIX_DEBUG_SCAN_START();
     debounce(raw_matrix, matrix, MATRIX_ROWS, changed);
-    MATRIX_DEBUG_SCAN_END();
+    MATRIX_DEBUG_SCAN_END(); MATRIX_DEBUG_GAP();
 
+    MATRIX_DEBUG_SCAN_START();
     matrix_scan_quantum();
+    MATRIX_DEBUG_SCAN_END();
     return (uint8_t)changed;
 }

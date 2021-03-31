@@ -158,13 +158,14 @@ uint8_t matrix_scan(void) {
     for (uint8_t current_row = 0; current_row < MATRIX_ROWS; current_row++) {
         changed |= read_cols_on_row(raw_matrix, current_row);
     }
-    MATRIX_DEBUG_SCAN_END();
+    MATRIX_DEBUG_SCAN_END(); MATRIX_DEBUG_GAP();
 
-    MATRIX_DEBUG_GAP();
     MATRIX_DEBUG_SCAN_START();
     debounce(raw_matrix, matrix, MATRIX_ROWS, changed);
-    MATRIX_DEBUG_SCAN_END();
+    MATRIX_DEBUG_SCAN_END(); MATRIX_DEBUG_GAP();
 
+    MATRIX_DEBUG_SCAN_START();
     matrix_scan_quantum();
+    MATRIX_DEBUG_SCAN_END();
     return (uint8_t)changed;
 }

@@ -1,6 +1,11 @@
 ifneq ($(strip $(TEST)),)
   define KEYBOARD_OPTION_PARSE
-    # parse 'consle', 'debug', 'mdelay-1', 'mdelay0', 'mdelay1', 'mdelay5', 'mdelay10', 'mdelay20', 'mdelay30', 'scan', 'matrix_debug', 'matrix_scan', 'input_pin_delay'
+    # parse 'consle', 'debug', 'scan', 'no-scan',
+    #       'mdelay-1', 'mdelay0', 'mdelay1',
+    #       'mdelay5', 'mdelay10', 'mdelay20', 'mdelay30',
+    #       'input_pin_delay', 'adaptive_delay', 'allways_delay'
+    #       'matrix_debug_delay', 'matrix_debug_delay',
+    #       'matrix_fast'
     $(if $(SHOW_PARCE),$(info parse .$1.))  #for debug  'make SHOW_PARCE=y ...'
     ifeq ($(strip $1),console)
         CONSOLE_ENABLE = yes
