@@ -15,7 +15,7 @@
 #endif
 
 #if defined(__ARMEL__) || defined(__ARMEB__)
-#  ifnef waitInputPinDelay
+#  ifndef waitInputPinDelay
 /* For GPIOs on ARM-based MCUs, the input pins are sampled by the clock of the bus
  * to which the GPIO is connected.
  * The connected buses differ depending on the various series of MCUs.
@@ -34,6 +34,6 @@
 #        endif
 #    endif
 #    define waitInputPinDelay() wait_cpuclock(GPIO_INPUT_PIN_DELAY)
-#  endif /* ifnef waitInputPinDelay */
+#  endif /* ifndef waitInputPinDelay */
 #endif
 // end of copy from #9603
