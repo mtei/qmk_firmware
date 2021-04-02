@@ -45,10 +45,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 typedef uint16_t     port_width_t;
 typedef matrix_row_t matrix_line_width_t;
-typedef struct _port_st {
+typedef struct _port_descriptor {
     int device;
     pin_t port;
-} port_st;
+} port_descriptor;
 
 /* matrix state(1:on, 0:off) */
 extern matrix_row_t raw_matrix[MATRIX_ROWS];  // raw values
@@ -83,52 +83,52 @@ LOCAL_FUNC
 void init_all_ports(void) {
     init_input_ports();
     init_output_ports();
-    init_mask();
+    init_iport_mask();
 }
 
-LOCAL_FUNC ALWAYS_INLINE bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row);
-LOCAL_FUNC bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row) {
+LOCAL_FUNC ALWAYS_INLINE bool select_line_and_read_inputs(matrix_row_t current_matrix[], uint8_t current_line);
+LOCAL_FUNC bool select_line_and_read_inputs(matrix_row_t current_matrix[], uint8_t current_line) {
     // Start with a clear matrix row
-    matrix_row_t current_row_value = 0;
+    matrix_row_t current_line_value = 0;
     port_width_t port_buffer[NUM_OF_INPUT_PORTS];
 
 #ifdef MATRIX_GPIO_NEED_SEPARATE_ATOMIC
     // Select row
-    select_output(current_row);
+    select_output(current_line);
     matrix_output_select_delay();
 
     // Read ports
     read_all_input_ports(port_buffer, false);
 
     // Unselect row
-    unselect_output_inline(current_row);
+    unselect_output_inline(current_line);
 #else
     ATOMIC_BLOCK_FORCEON {
         // Select row
-        select_output(current_row);
+        select_output(current_line);
         matrix_output_select_delay();
 
         // Read ports
         read_all_input_ports(port_buffer, false);
 
         // Unselect row
-        unselect_output_inline(current_row);
+        unselect_output_inline(current_line);
     }
 #endif
 
     // Build row
-    current_row_value = build_matrix_line(port_buffer);
+    current_line_value = build_matrix_line(port_buffer);
 
     // Wait signal raise up
-    if (current_row_value) {
+    if (current_line_value) {
         MATRIX_DEBUG_DELAY_START();
         wait_unselect_done();
         MATRIX_DEBUG_DELAY_END();
     }
 
     // If the row has changed, store the row and return the changed flag.
-    if (current_matrix[current_row] != current_row_value) {
-        current_matrix[current_row] = current_row_value;
+    if (current_matrix[current_line] != current_line_value) {
+        current_matrix[current_line] = current_line_value;
         return true;
     }
     return false;
@@ -154,9 +154,9 @@ uint8_t matrix_scan(void) {
     MATRIX_DEBUG_PIN_INIT();
 
     MATRIX_DEBUG_SCAN_START();
-    // Set row, read cols
-    for (uint8_t current_row = 0; current_row < MATRIX_ROWS; current_row++) {
-        changed |= read_cols_on_row(raw_matrix, current_row);
+    //select line, read inputs
+    for (uint8_t current_line = 0; current_line < MATRIX_ROWS; current_line++) {
+        changed |= select_line_and_read_inputs(raw_matrix, current_line);
     }
     MATRIX_DEBUG_SCAN_END(); MATRIX_DEBUG_GAP();
 

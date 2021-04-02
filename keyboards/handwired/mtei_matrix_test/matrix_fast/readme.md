@@ -43,14 +43,14 @@ eg.
 ## Compile
 
 ```
-make TEST=matrix_fast,scan,matrix_debug_scan   handwired/mtei_matrix_test/promicro:default:flash
-make TEST=matrix_fast,scan,matrix_debug_delay   handwired/mtei_matrix_test/promicro:default:flash
+make MTEST=matrix_fast,scan,matrix_debug_scan   handwired/mtei_matrix_test/promicro:default:flash
+make MTEST=matrix_fast,scan,matrix_debug_delay   handwired/mtei_matrix_test/promicro:default:flash
 ```
 
 ## Test results
 
 ### Pro Micro
-#### `make TEST=matrix_fast,scan,matrix_debug_scan handwired/mtei_matrix_test/promicro:default:flash`
+#### `make MTEST=matrix_fast,scan,matrix_debug_scan handwired/mtei_matrix_test/promicro:default:flash`
 - Execution time of `matrix_scan()`: 39.8us
 - Matrix scan rate:  11000 scans/sec
 
@@ -60,7 +60,7 @@ make TEST=matrix_fast,scan,matrix_debug_delay   handwired/mtei_matrix_test/promi
 
 ### Proton-C
 
-#### `make TEST=matrix_fast,scan,matrix_debug_scan handwired/mtei_matrix_test/proton_c:default:flash`
+#### `make MTEST=matrix_fast,scan,matrix_debug_scan handwired/mtei_matrix_test/proton_c:default:flash`
 - Execution time of `matrix_scan()`: 43.4us
 - Matrix scan rate: 14800 scans/sec
 

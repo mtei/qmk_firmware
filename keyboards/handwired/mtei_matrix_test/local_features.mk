@@ -1,4 +1,4 @@
-ifneq ($(strip $(TEST)),)
+ifneq ($(strip $(MTEST)),)
   define KEYBOARD_OPTION_PARSE
     # parse 'consle', 'debug', 'scan', 'no-scan',
     #       'mdelay-1', 'mdelay0', 'mdelay1',
@@ -74,7 +74,7 @@ ifneq ($(strip $(TEST)),)
   endef # end of KEYMAP_OPTION_PARSE
 
   COMMA=,
-  $(eval $(foreach A_OPTION_NAME,$(subst $(COMMA), ,$(TEST)),  \
+  $(eval $(foreach A_OPTION_NAME,$(subst $(COMMA), ,$(MTEST)),  \
       $(call KEYBOARD_OPTION_PARSE,$(A_OPTION_NAME))))
 endif
 

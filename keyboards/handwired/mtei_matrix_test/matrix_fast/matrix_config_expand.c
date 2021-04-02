@@ -87,7 +87,7 @@ port_width_t iport_mask[NUM_OF_INPUT_PORTS];
     [iport_index_##name] = { dev, port },
 #define INPUT_PORTS_LIST_ELEMENT(x) _INPUT_PORTS_LIST_ELEMENT x
 LOCAL_DATA
-const port_st iport_list[NUM_OF_INPUT_PORTS] = {
+const port_descriptor iport_list[NUM_OF_INPUT_PORTS] = {
     MAP(INPUT_PORTS_LIST_ELEMENT, MATRIX_IN_PORTS)
 };
 
@@ -95,7 +95,7 @@ const port_st iport_list[NUM_OF_INPUT_PORTS] = {
     [oport_index_##name] = { dev, port },
 #define OUTPUT_PORTS_LIST_ELEMENT(x) _OUTPUT_PORTS_LIST_ELEMENT x
 LOCAL_DATA
-const port_st oport_list[NUM_OF_OUTPUT_PORTS] = {
+const port_descriptor oport_list[NUM_OF_OUTPUT_PORTS] = {
     MAP(OUTPUT_PORTS_LIST_ELEMENT, MATRIX_OUT_PORTS)
 };
 
@@ -136,15 +136,15 @@ void init_input_ports(void) {
     MAP(INIT_INPUT_PIN, MATRIX_IN_PINS)
 }
 
-#define _INIT_MASK(index, pname, bit) \
+#define _INIT_IPORT_MASK(index, pname, bit) \
     iport_mask[iport_index_##pname] |= getMatrixInputMaskBit(iport_list[iport_index_##pname].device, bit);
-#define INIT_MASK(x)  _INIT_MASK x
+#define INIT_IPORT_MASK(x)  _INIT_IPORT_MASK x
 LOCAL_FUNC
-void init_mask(void) {
+void init_iport_mask(void) {
     for (int i = 0; i < NUM_OF_INPUT_PORTS; i++ ) {
         iport_mask[i] = 0;
     }
-    MAP(INIT_MASK, MATRIX_IN_PINS)
+    MAP(INIT_IPORT_MASK, MATRIX_IN_PINS)
 }
 
 #define _READ_INPUT_PORT(name, dev, port) \
