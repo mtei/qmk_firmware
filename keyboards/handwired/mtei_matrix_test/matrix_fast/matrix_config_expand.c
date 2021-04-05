@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef DEBUG_MATRIX_CONFIG
 // config expand debug
-//   avr-gcc -DDEBUG_MATRIX_CONFIG=\"test_config.h\" -E -C -I. matrix_config_expand.c
+//   avr-gcc -DDEBUG_MATRIX_CONFIG=\"test_config.h\" -E -C matrix_config_expand.c
 #    include DEBUG_MATRIX_CONFIG
 #endif
 
@@ -53,38 +53,38 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "cpp_map.h"
 
-#define _INPUT_PORTS_ENUM_ELEMENT(name, dev, port) iport_index_##name,
+#define _INPUT_PORTS_ENUM_ELEMENT(name, dev, port) inport_index_##name,
 #define INPUT_PORTS_ENUM_ELEMENT(x) _INPUT_PORTS_ENUM_ELEMENT x
 enum INPUT_PORTS {
     MAP(INPUT_PORTS_ENUM_ELEMENT, MATRIX_IN_PORTS)
     NUM_OF_INPUT_PORTS
 };
 
-#define _INPUT_PINS_ENUM_ELEMENT(index, port, bit) ipin_index_##index,
+#define _INPUT_PINS_ENUM_ELEMENT(index, port, bit) inpin_index_##index,
 #define INPUT_PINS_ENUM_ELEMENT(x) _INPUT_PINS_ENUM_ELEMENT x
 enum INPUT_PINS {
     MAP(INPUT_PINS_ENUM_ELEMENT, MATRIX_IN_PINS)
-    END_ipin_index
+    END_inpin_index
 };
 
-#define _OUTPUT_PORTS_ENUM_ELEMENT(name, dev, port) oport_index_##name,
+#define _OUTPUT_PORTS_ENUM_ELEMENT(name, dev, port) outport_index_##name,
 #define OUTPUT_PORTS_ENUM_ELEMENT(x) _OUTPUT_PORTS_ENUM_ELEMENT x
 enum OUTPUT_PORTS {
     MAP(OUTPUT_PORTS_ENUM_ELEMENT, MATRIX_OUT_PORTS)
     NUM_OF_OUTPUT_PORTS
 };
 
-#define _OUTPUT_PINS_ENUM_ELEMENT(index, port, bit) opin_index_##index,
+#define _OUTPUT_PINS_ENUM_ELEMENT(index, port, bit) outpin_index_##index,
 #define OUTPUT_PINS_ENUM_ELEMENT(x) _OUTPUT_PINS_ENUM_ELEMENT x
 enum OUTPUT_PINS {
     MAP(OUTPUT_PINS_ENUM_ELEMENT, MATRIX_OUT_PINS)
-    END_opin_index
+    END_outpin_index
 };
 
 port_width_t iport_mask[NUM_OF_INPUT_PORTS];
 
 #define _INPUT_PORTS_LIST_ELEMENT(name, dev, port) \
-    [iport_index_##name] = { dev, port },
+    [inport_index_##name] = { dev, port },
 #define INPUT_PORTS_LIST_ELEMENT(x) _INPUT_PORTS_LIST_ELEMENT x
 LOCAL_DATA
 const port_descriptor iport_list[NUM_OF_INPUT_PORTS] = {
@@ -92,7 +92,7 @@ const port_descriptor iport_list[NUM_OF_INPUT_PORTS] = {
 };
 
 #define _OUTPUT_PORTS_LIST_ELEMENT(name, dev, port) \
-    [oport_index_##name] = { dev, port },
+    [outport_index_##name] = { dev, port },
 #define OUTPUT_PORTS_LIST_ELEMENT(x) _OUTPUT_PORTS_LIST_ELEMENT x
 LOCAL_DATA
 const port_descriptor oport_list[NUM_OF_OUTPUT_PORTS] = {
@@ -100,9 +100,9 @@ const port_descriptor oport_list[NUM_OF_OUTPUT_PORTS] = {
 };
 
 #define _SELECT_OUTPUT_PIN(index, pname, bit) \
-    case opin_index_##index: \
-        setMatrixOutput_writeLow(oport_list[oport_index_##pname].device,     \
-                                 oport_list[oport_index_##pname].port, bit); \
+    case outpin_index_##index: \
+        setMatrixOutput_writeLow(oport_list[outport_index_##pname].device,     \
+                                 oport_list[outport_index_##pname].port, bit); \
     break;
 #define SELECT_OUTPUT_PIN(x) _SELECT_OUTPUT_PIN x
 LOCAL_FUNC ALWAYS_INLINE void select_output(uint8_t out_index);
@@ -114,9 +114,9 @@ void select_output(uint8_t out_index) {
 }
 
 #define _UNSELECT_OUTPUT_PIN(index, pname, bit) \
-    case opin_index_##index: \
-        setMatrixOutput_writeHighZ(oport_list[oport_index_##pname].device,     \
-                                   oport_list[oport_index_##pname].port, bit); \
+    case outpin_index_##index: \
+        setMatrixOutput_writeHighZ(oport_list[outport_index_##pname].device,     \
+                                   oport_list[outport_index_##pname].port, bit); \
     break;
 #define UNSELECT_OUTPUT_PIN(x) _UNSELECT_OUTPUT_PIN x
 LOCAL_FUNC ALWAYS_INLINE void unselect_output_inline(uint8_t out_index);
@@ -128,27 +128,27 @@ void unselect_output_inline(uint8_t out_index) {
 }
 
 #define _INIT_INPUT_PIN(index, pname, bit) \
-    setMatrixInputHigh(iport_list[iport_index_##pname].device,    \
-                       iport_list[iport_index_##pname].port, bit);
+    setMatrixInputHigh(iport_list[inport_index_##pname].device,    \
+                       iport_list[inport_index_##pname].port, bit);
 #define INIT_INPUT_PIN(x) _INIT_INPUT_PIN x
 LOCAL_FUNC
 void init_input_ports(void) {
     MAP(INIT_INPUT_PIN, MATRIX_IN_PINS)
 }
 
-#define _INIT_IPORT_MASK(index, pname, bit) \
-    iport_mask[iport_index_##pname] |= getMatrixInputMaskBit(iport_list[iport_index_##pname].device, bit);
-#define INIT_IPORT_MASK(x)  _INIT_IPORT_MASK x
+#define _INIT_INPORT_MASK(index, pname, bit) \
+    iport_mask[inport_index_##pname] |= getMatrixInputMaskBit(iport_list[inport_index_##pname].device, bit);
+#define INIT_INPORT_MASK(x)  _INIT_INPORT_MASK x
 LOCAL_FUNC
-void init_iport_mask(void) {
+void init_inport_mask(void) {
     for (int i = 0; i < NUM_OF_INPUT_PORTS; i++ ) {
         iport_mask[i] = 0;
     }
-    MAP(INIT_IPORT_MASK, MATRIX_IN_PINS)
+    MAP(INIT_INPORT_MASK, MATRIX_IN_PINS)
 }
 
 #define _READ_INPUT_PORT(name, dev, port) \
-    buffer[iport_index_##name] = readMatrixPort(dev, port);
+    buffer[inport_index_##name] = readMatrixPort(dev, port);
 #define READ_INPUT_PORT(x) _READ_INPUT_PORT x
 LOCAL_FUNC
 ALWAYS_INLINE void read_all_input_ports(port_width_t buffer[NUM_OF_INPUT_PORTS], bool wait_unselect);
@@ -158,7 +158,7 @@ void read_all_input_ports(port_width_t buffer[NUM_OF_INPUT_PORTS], bool wait_uns
 }
 
 #define _MASK_INPUT(name, dev, port) \
-    mask |= ((~buffer[iport_index_##name]) & iport_mask[iport_index_##name]);
+    mask |= ((~buffer[inport_index_##name]) & iport_mask[inport_index_##name]);
 #define MASK_INPUT(x) _MASK_INPUT x
 LOCAL_FUNC ALWAYS_INLINE void wait_unselect_done(void);
 LOCAL_FUNC
@@ -175,7 +175,7 @@ void wait_unselect_done(void) {
 }
 
 #define _BUILD_INPUT_PORT(index, pname, bit) \
-    result |= (buffer[iport_index_##pname] & _BV(bit)) ? 0 : _BV(ipin_index_##index);
+    result |= (buffer[inport_index_##pname] & _BV(bit)) ? 0 : _BV(inpin_index_##index);
 #define BUILD_INPUT_PORT(x) _BUILD_INPUT_PORT x
 LOCAL_FUNC ALWAYS_INLINE matrix_line_width_t build_matrix_line(port_width_t buffer[NUM_OF_INPUT_PORTS]);
 LOCAL_FUNC
