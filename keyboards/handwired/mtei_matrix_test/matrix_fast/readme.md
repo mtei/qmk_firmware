@@ -18,7 +18,7 @@ eg.
 //  #define MATRIX_COL_PINS { F4, F5, F6, F7, B1, B3 }
 
 // list of OUTPUT(row) ports
-#define MATRIX_OUT_PORTS (Port_D, 0, D0), (Port_C, 0, C0), (Port_E, 0, E0), (Port_B, 0, B0)
+#define MATRIX_OUT_PORTS (Port_D, MCU_GPIO, D0), (Port_C, MCU_GPIO, C0), (Port_E, MCU_GPIO, E0), (Port_B, MCU_GPIO, B0)
 // list of OUTPUT(row) pins
 #define MATRIX_OUT_PINS  \
     (0, Port_D, 4), \
@@ -29,7 +29,7 @@ eg.
     (5, Port_B, 5)
 
 // list of INPUT(col) ports
-#define MATRIX_IN_PORTS (Port_F, 0, F0), (Port_B, 0, B0)
+#define MATRIX_IN_PORTS (Port_F, MCU_GPIO, F0), (Port_B, MCU_GPIO, B0)
 // list of INPUT(col) pins
 #define MATRIX_IN_PINS \
     (0, Port_F, 4), \

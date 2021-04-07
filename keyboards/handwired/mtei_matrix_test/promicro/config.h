@@ -48,10 +48,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DIODE_DIRECTION COL2ROW
 
 #define MATRIX_OUT_PORTS \
-    (Port_D, 0, D0), \
-    (Port_C, 0, C0), \
-    (Port_E, 0, E0), \
-    (Port_B, 0, B0)
+    (Port_D, MCU_GPIO, D0), \
+    (Port_C, MCU_GPIO, C0), \
+    (Port_E, MCU_GPIO, E0), \
+    (Port_B, MCU_GPIO, B0)
 #define MATRIX_OUT_PINS  \
     (0, Port_D, 4), \
     (1, Port_C, 6), \
@@ -60,8 +60,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     (4, Port_B, 4), \
     (5, Port_B, 5)
 #define MATRIX_IN_PORTS \
-    (Port_F, 0, F0), \
-    (Port_B, 0, B0)
+    (Port_F, MCU_GPIO, F0), \
+    (Port_B, MCU_GPIO, B0)
 #define MATRIX_IN_PINS \
     (0, Port_F, 4), \
     (1, Port_F, 5), \

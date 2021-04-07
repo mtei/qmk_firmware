@@ -47,7 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* COL2ROW, ROW2COL */
 #define DIODE_DIRECTION COL2ROW
 
-#define MATRIX_OUT_PORTS (Port_B, 0, B0)
+#define MATRIX_OUT_PORTS (Port_B, MCU_GPIO, B0)
 #define MATRIX_OUT_PINS  \
     (0, Port_B, 5), \
     (1, Port_B, 4), \
@@ -55,7 +55,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     (3, Port_B, 2), \
     (4, Port_B, 1), \
     (5, Port_B, 0)
-#define MATRIX_IN_PORTS (Port_A, 0, A0), (Port_B, 0, B0)
+#define MATRIX_IN_PORTS (Port_A, MCU_GPIO, A0), (Port_B, MCU_GPIO, B0)
 #define MATRIX_IN_PINS \
     (0, Port_A, 2),  \
     (1, Port_A, 1),  \

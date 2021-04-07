@@ -22,40 +22,56 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    include DEBUG_MATRIX_CONFIG
 #endif
 
+#undef NO_PIN /* cancel NO_PIN define in tmk_core/common/pin_defs.h */
+#define NO_PIN  NO_PORT, 0
+#ifdef DIRECT_PINS
+#    undef MATRIX_OUT_PORTS
+#    define MATRIX_OUT_PINS  (0, NO_PIN)
+#endif
+
 #ifdef MATRIX_GPIO_NEED_SEPARATE_ATOMIC
 #    ifndef setMatrixInputHigh
-#        define setMatrixInputHigh(dev, port, bit) setPortBitInputHigh_atomic(port, bit)
+#        define setMatrixInputHigh(dev, port, bit) do { if ((dev) == MCU_GPIO) { setPortBitInputHigh_atomic(port, bit); }} while(0)
 #    endif
 #    ifndef setMatrixOutput_writeHighZ
-#        define setMatrixOutput_writeHighZ(dev, port, bit) setPortBitInputHigh_atomic(port, bit)
+#        define setMatrixOutput_writeHighZ(dev, port, bit) do { if ((dev) == MCU_GPIO) { setPortBitInputHigh_atomic(port, bit); }} while(0)
 #    endif
 #    ifndef setMatrixOutput_writeLow
-#        define setMatrixOutput_writeLow(dev, port, bit) setPortBitOutput_writeLow_atomic(port, bit)
+#        define setMatrixOutput_writeLow(dev, port, bit) do { if ((dev) == MCU_GPIO) { setPortBitOutput_writeLow_atomic(port, bit); }} while(0)
 #    endif
 #else
 #    ifndef setMatrixInputHigh
-#        define setMatrixInputHigh(dev, port, bit) setPortBitInputHigh(port, bit)
+#        define setMatrixInputHigh(dev, port, bit) do { if ((dev) == MCU_GPIO) { setPortBitInputHigh(port, bit); }} while(0)
 #    endif
 #    ifndef setMatrixOutput_writeHighZ
-#        define setMatrixOutput_writeHighZ(dev, port, bit) setPortBitInputHigh(port, bit)
+#        define setMatrixOutput_writeHighZ(dev, port, bit) do { if ((dev) == MCU_GPIO) { setPortBitInputHigh(port, bit); }} while(0)
 #    endif
 #    ifndef setMatrixOutput_writeLow
-#        define setMatrixOutput_writeLow(dev, port, bit) setPortBitOutput_writeLow(port, bit)
+#        define setMatrixOutput_writeLow(dev, port, bit) do { if ((dev) == MCU_GPIO) { setPortBitOutput_writeLow(port, bit); }} while(0)
 #    endif
 #endif
 
 #ifndef readMatrixPort
-#    define readMatrixPort(dev, port) readPort(port)
+#    define readMatrixPort(dev, port) (((dev) == MCU_GPIO) ? readPort(port) : 0)
 #endif
 #ifndef getMatrixInputMaskBit
-#    define getMatrixInputMaskBit(dev, bit) _BV((bit)&0xF)
+#    define getMatrixInputMaskBit(dev, bit) (((dev) != NO_DEVICE) ? _BV((bit)&0xF) : 0)
 #endif
 
 #include "cpp_map.h"
 
+enum DEVICE_NAME {
+    MCU_GPIO,
+    NO_DEVICE,
+#ifdef MATRIX_DEVICES
+    MATRIX_DEVICES
+#endif
+};
+
 #define _INPUT_PORTS_ENUM_ELEMENT(name, dev, port) inport_index_##name,
 #define INPUT_PORTS_ENUM_ELEMENT(x) _INPUT_PORTS_ENUM_ELEMENT x
 enum INPUT_PORTS {
+    INPUT_PORTS_ENUM_ELEMENT((NO_PORT, NO_DEVICE, 0))
     MAP(INPUT_PORTS_ENUM_ELEMENT, MATRIX_IN_PORTS)
     NUM_OF_INPUT_PORTS
 };
@@ -70,7 +86,10 @@ enum INPUT_PINS {
 #define _OUTPUT_PORTS_ENUM_ELEMENT(name, dev, port) outport_index_##name,
 #define OUTPUT_PORTS_ENUM_ELEMENT(x) _OUTPUT_PORTS_ENUM_ELEMENT x
 enum OUTPUT_PORTS {
+    OUTPUT_PORTS_ENUM_ELEMENT((NO_PORT, NO_DEVICE, 0))
+#ifdef MATRIX_OUT_PORTS
     MAP(OUTPUT_PORTS_ENUM_ELEMENT, MATRIX_OUT_PORTS)
+#endif
     NUM_OF_OUTPUT_PORTS
 };
 
@@ -87,7 +106,8 @@ port_width_t iport_mask[NUM_OF_INPUT_PORTS];
     [inport_index_##name] = { dev, port },
 #define INPUT_PORTS_LIST_ELEMENT(x) _INPUT_PORTS_LIST_ELEMENT x
 LOCAL_DATA
-const port_descriptor iport_list[NUM_OF_INPUT_PORTS] = {
+const port_descriptor inport_list[NUM_OF_INPUT_PORTS] = {
+    INPUT_PORTS_LIST_ELEMENT((NO_PORT, NO_DEVICE, 0))
     MAP(INPUT_PORTS_LIST_ELEMENT, MATRIX_IN_PORTS)
 };
 
@@ -95,14 +115,17 @@ const port_descriptor iport_list[NUM_OF_INPUT_PORTS] = {
     [outport_index_##name] = { dev, port },
 #define OUTPUT_PORTS_LIST_ELEMENT(x) _OUTPUT_PORTS_LIST_ELEMENT x
 LOCAL_DATA
-const port_descriptor oport_list[NUM_OF_OUTPUT_PORTS] = {
+const port_descriptor outport_list[NUM_OF_OUTPUT_PORTS] = {
+    OUTPUT_PORTS_LIST_ELEMENT((NO_PORT, NO_DEVICE, 0))
+#ifdef MATRIX_OUT_PORTS
     MAP(OUTPUT_PORTS_LIST_ELEMENT, MATRIX_OUT_PORTS)
+#endif
 };
 
 #define _SELECT_OUTPUT_PIN(index, pname, bit) \
     case outpin_index_##index: \
-        setMatrixOutput_writeLow(oport_list[outport_index_##pname].device,     \
-                                 oport_list[outport_index_##pname].port, bit); \
+        setMatrixOutput_writeLow(outport_list[outport_index_##pname].device,     \
+                                 outport_list[outport_index_##pname].port, bit); \
     break;
 #define SELECT_OUTPUT_PIN(x) _SELECT_OUTPUT_PIN x
 LOCAL_FUNC ALWAYS_INLINE void select_output(uint8_t out_index);
@@ -115,8 +138,8 @@ void select_output(uint8_t out_index) {
 
 #define _UNSELECT_OUTPUT_PIN(index, pname, bit) \
     case outpin_index_##index: \
-        setMatrixOutput_writeHighZ(oport_list[outport_index_##pname].device,     \
-                                   oport_list[outport_index_##pname].port, bit); \
+        setMatrixOutput_writeHighZ(outport_list[outport_index_##pname].device,     \
+                                   outport_list[outport_index_##pname].port, bit); \
     break;
 #define UNSELECT_OUTPUT_PIN(x) _UNSELECT_OUTPUT_PIN x
 LOCAL_FUNC ALWAYS_INLINE void unselect_output_inline(uint8_t out_index);
@@ -128,8 +151,8 @@ void unselect_output_inline(uint8_t out_index) {
 }
 
 #define _INIT_INPUT_PIN(index, pname, bit) \
-    setMatrixInputHigh(iport_list[inport_index_##pname].device,    \
-                       iport_list[inport_index_##pname].port, bit);
+    setMatrixInputHigh(inport_list[inport_index_##pname].device,    \
+                       inport_list[inport_index_##pname].port, bit);
 #define INIT_INPUT_PIN(x) _INIT_INPUT_PIN x
 LOCAL_FUNC
 void init_input_ports(void) {
@@ -137,7 +160,7 @@ void init_input_ports(void) {
 }
 
 #define _INIT_INPORT_MASK(index, pname, bit) \
-    iport_mask[inport_index_##pname] |= getMatrixInputMaskBit(iport_list[inport_index_##pname].device, bit);
+    iport_mask[inport_index_##pname] |= getMatrixInputMaskBit(inport_list[inport_index_##pname].device, bit);
 #define INIT_INPORT_MASK(x)  _INIT_INPORT_MASK x
 LOCAL_FUNC
 void init_inport_mask(void) {
@@ -154,6 +177,7 @@ LOCAL_FUNC
 ALWAYS_INLINE void read_all_input_ports(port_width_t buffer[NUM_OF_INPUT_PORTS], bool wait_unselect);
 LOCAL_FUNC
 void read_all_input_ports(port_width_t buffer[NUM_OF_INPUT_PORTS], bool wait_unselect) {
+    READ_INPUT_PORT((NO_PORT, NO_DEVICE, 0))
     MAP(READ_INPUT_PORT, MATRIX_IN_PORTS)
 }
 
