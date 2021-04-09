@@ -100,6 +100,9 @@ LOCAL_FUNC void select_line_and_read_input_ports(uint8_t current_line, port_widt
 }
 
 LOCAL_FUNC ALWAYS_INLINE bool read_matrix_line(matrix_row_t current_matrix[], uint8_t current_line);
+
+#ifndef DIRECT_PINS
+
 LOCAL_FUNC bool read_matrix_line(matrix_row_t current_matrix[], uint8_t current_line) {
     // Start with a clear matrix row
     matrix_row_t current_line_value = 0;
@@ -130,6 +133,36 @@ LOCAL_FUNC bool read_matrix_line(matrix_row_t current_matrix[], uint8_t current_
     }
     return false;
 }
+
+#else /* ------------------------ DIRECT_PINS ------------------------ */
+LOCAL_FUNC bool read_matrix_line(matrix_row_t current_matrix[], uint8_t current_line) {
+    bool changed = false;
+
+    if (current_line != 0) {
+        return changed;
+    }
+
+    matrix_row_t matrix_buffer[MATRIX_ROWS];
+    port_width_t port_buffer[NUM_OF_INPUT_PORTS];
+
+    for (uint8_t i = 0; i < MATRIX_ROWS; i++) {
+        matrix_buffer[i] = 0;
+    }
+
+    read_all_input_ports(port_buffer, false);
+
+    // Build matrix
+    build_matrix_direct(port_buffer, matrix_buffer);
+
+    for (uint8_t line = 0; line < MATRIX_ROWS; line ++) {
+        if (current_matrix[line] != matrix_buffer[line]) {
+            current_matrix[line] = matrix_buffer[line];
+            changed = true;
+        }
+    }
+    return changed;
+}
+#endif
 
 void matrix_init(void) {
     // initialize key pins
