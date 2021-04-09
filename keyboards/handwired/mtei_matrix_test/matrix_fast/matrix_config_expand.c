@@ -208,3 +208,13 @@ matrix_line_width_t build_matrix_line(port_width_t buffer[NUM_OF_INPUT_PORTS]) {
     MAP(BUILD_INPUT_PORT, MATRIX_IN_PINS);
     return result;
 }
+
+#define _BUILD_INPUT_PORT_DIRECT(index, pname, bit) \
+    matrix[(inpin_index_##index)/MATRIX_COLS] \
+        |= (buffer[inport_index_##pname] & _BV(bit)) ? 0 : _BV((inpin_index_##index)%MATRIX_COLS);
+#define BUILD_INPUT_PORT_DIRECT(x) _BUILD_INPUT_PORT_DIRECT x
+LOCAL_FUNC ALWAYS_INLINE void build_matrix_direct(port_width_t buffer[NUM_OF_INPUT_PORTS], matrix_row_t matrix[]);
+LOCAL_FUNC
+void build_matrix_direct(port_width_t buffer[NUM_OF_INPUT_PORTS], matrix_row_t matrix[]) {
+    MAP(BUILD_INPUT_PORT_DIRECT, MATRIX_IN_PINS);
+}

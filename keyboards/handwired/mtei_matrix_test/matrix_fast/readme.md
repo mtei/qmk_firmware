@@ -3,9 +3,10 @@
 ## ToDo list
 - [x] support Pro Micro (2021-3-27)
 - [x] support Proton-C (2021-3-29)
-- [ ] support DIRECT_PINS
+- [x] support DIRECT_PINS
 - [ ] support DIODE_DIRECTION == ROW2COL
 - [ ] support 74HC157: quadruple 2-line to 1-line data selectors / multiplexers
+- [ ] support 74HC153: dual 4-line to 1-line data selectors / multiplexers
 - [ ] support I/O expander (MCP23018)
 - [ ] support MCU & I/O expander (MCP23018) mixture like ErgoDox
 
