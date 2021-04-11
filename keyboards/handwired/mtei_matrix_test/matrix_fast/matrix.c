@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "gpio_extr.h"
 #include "util.h"
 #include "matrix.h"
+#include "matrix_extr.h"
 #include "debounce.h"
 #include "quantum.h"
 
@@ -44,7 +45,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 typedef uint16_t     port_width_t;
-typedef matrix_row_t matrix_line_width_t;
+#if MATRIX_TYPE == DIRECT_SWITCH || MATRIX_TYPE == DIODE_COL2ROW
+#    define MATRIX_LINES MATRIX_ROWS
+typedef matrix_row_t matrix_line_t;
+#endif
+#if MATRIX_TYPE == DIODE_ROW2COL
+#    define MATRIX_LINES MATRIX_COLS
+typedef matrix_col_t matrix_line_t;
+#endif
 typedef struct _port_descriptor {
     int device;
     pin_t port;
@@ -99,13 +107,12 @@ LOCAL_FUNC void select_line_and_read_input_ports(uint8_t current_line, port_widt
     unselect_output_inline(current_line);
 }
 
-LOCAL_FUNC ALWAYS_INLINE bool read_matrix_line(matrix_row_t current_matrix[], uint8_t current_line);
+LOCAL_FUNC ALWAYS_INLINE void read_matrix_line(matrix_line_t phy_matrix[], uint8_t current_line);
 
-#ifndef DIRECT_PINS
-
-LOCAL_FUNC bool read_matrix_line(matrix_row_t current_matrix[], uint8_t current_line) {
+#if MATRIX_TYPE == DIODE_ROW2COL || MATRIX_TYPE == DIODE_COL2ROW
+LOCAL_FUNC void read_matrix_line(matrix_line_t phy_matrix[], uint8_t current_line) {
     // Start with a clear matrix row
-    matrix_row_t current_line_value = 0;
+    matrix_line_t current_line_value = 0;
     port_width_t port_buffer[NUM_OF_INPUT_PORTS];
 
 #ifdef MATRIX_GPIO_NEED_SEPARATE_ATOMIC
@@ -125,44 +132,28 @@ LOCAL_FUNC bool read_matrix_line(matrix_row_t current_matrix[], uint8_t current_
         wait_unselect_done();
         MATRIX_DEBUG_DELAY_END();
     }
-
-    // If the row has changed, store the row and return the changed flag.
-    if (current_matrix[current_line] != current_line_value) {
-        current_matrix[current_line] = current_line_value;
-        return true;
-    }
-    return false;
+    phy_matrix[current_line] = current_line_value;
 }
+#endif // MATRIX_TYPE == DIODE_ROW2COL || MATRIX_TYPE == DIODE_COL2ROW
 
-#else /* ------------------------ DIRECT_PINS ------------------------ */
-LOCAL_FUNC bool read_matrix_line(matrix_row_t current_matrix[], uint8_t current_line) {
-    bool changed = false;
-
-    if (current_line != 0) {
-        return changed;
-    }
-
-    matrix_row_t matrix_buffer[MATRIX_ROWS];
+#if MATRIX_TYPE == DIRECT_SWITCH
+LOCAL_FUNC void read_matrix_line(matrix_line_t phy_matrix[], uint8_t current_line) {
     port_width_t port_buffer[NUM_OF_INPUT_PORTS];
 
-    for (uint8_t i = 0; i < MATRIX_ROWS; i++) {
-        matrix_buffer[i] = 0;
+    if (current_line != 0) {
+        return;
+    }
+
+    for (uint8_t i = 0; i < MATRIX_LINES; i++) {
+        phy_matrix[i] = 0;
     }
 
     read_all_input_ports(port_buffer, false);
 
     // Build matrix
-    build_matrix_direct(port_buffer, matrix_buffer);
-
-    for (uint8_t line = 0; line < MATRIX_ROWS; line ++) {
-        if (current_matrix[line] != matrix_buffer[line]) {
-            current_matrix[line] = matrix_buffer[line];
-            changed = true;
-        }
-    }
-    return changed;
+    build_matrix_direct(port_buffer, phy_matrix);
 }
-#endif
+#endif // MATRIX_TYPE == DIRECT_SWITCH
 
 void matrix_init(void) {
     // initialize key pins
@@ -180,17 +171,55 @@ void matrix_init(void) {
 }
 
 uint8_t matrix_scan(void) {
-    bool changed = false;
+    matrix_line_t phy_matrix[MATRIX_LINES];
+
     MATRIX_DEBUG_PIN_INIT();
 
     MATRIX_DEBUG_SCAN_START();
-    //select line, read inputs
-    for (uint8_t current_line = 0; current_line < MATRIX_ROWS; current_line++) {
-        changed |= read_matrix_line(raw_matrix, current_line);
-    }
-    MATRIX_DEBUG_SCAN_END(); MATRIX_DEBUG_GAP();
 
-    MATRIX_DEBUG_SCAN_START();
+    // read I/O port to phy_matrix[] (physical matrix)
+    //select line, read inputs
+    for (uint8_t current_line = 0; current_line < MATRIX_LINES; current_line++) {
+        read_matrix_line(phy_matrix, current_line);
+    }
+    MATRIX_DEBUG_SCAN_END(); MATRIX_DEBUG_GAP(); MATRIX_DEBUG_SCAN_START();
+
+    bool changed = false;
+#if MATRIX_TYPE == DIRECT_SWITCH || MATRIX_TYPE == DIODE_COL2ROW
+    // copy phy_matrix[] to raw_matrix[]
+    for (uint8_t current_line = 0; current_line < MATRIX_ROWS; current_line++) {
+        if (raw_matrix[current_line] != phy_matrix[current_line]) {
+            changed = true;
+            raw_matrix[current_line] = phy_matrix[current_line];
+        }
+    }
+#endif
+#if MATRIX_TYPE == DIODE_ROW2COL
+    // transpose phy_matrix[] to raw_matrix[]
+    matrix_row_t trans_matrix[MATRIX_ROWS];
+    for (uint8_t i = 0; i < MATRIX_ROWS; i++ ) {
+        trans_matrix[i] = 0;
+    }
+    for (uint8_t src_line = 0; src_line < MATRIX_LINES; src_line++) {
+        matrix_line_t src_line_data = phy_matrix[src_line];
+        matrix_row_t dist_bit = MATRIX_ROW_SHIFTER << src_line;
+        for (uint8_t dist_rows = 0; dist_rows < MATRIX_ROWS; dist_rows++) {
+            if ((src_line_data & 1) == 1) {
+                trans_matrix[dist_rows] |= dist_bit;
+            }
+            src_line_data >>= 1;
+        }
+    }
+    for (uint8_t current_row = 0; current_row < MATRIX_ROWS; current_row++) {
+        if (raw_matrix[current_row] != trans_matrix[current_row]) {
+            changed = true;
+            raw_matrix[current_row] = trans_matrix[current_row];
+        }
+    }
+#endif
+    MATRIX_DEBUG_SCAN_END(); MATRIX_DEBUG_GAP(); MATRIX_DEBUG_SCAN_START();
+
+    // debounce raw_matrix[] to matrix[]
     debounce(raw_matrix, matrix, MATRIX_ROWS, changed);
     MATRIX_DEBUG_SCAN_END(); MATRIX_DEBUG_GAP();
 

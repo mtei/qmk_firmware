@@ -16,6 +16,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 // clang-format off
 
+#include "matrix_extr.h"
+
 #ifdef DEBUG_MATRIX_CONFIG
 // config expand debug
 //   avr-gcc -DDEBUG_MATRIX_CONFIG=\"test_config.h\" -E -C matrix_config_expand.c
@@ -24,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #undef NO_PIN /* cancel NO_PIN define in tmk_core/common/pin_defs.h */
 #define NO_PIN  NO_PORT, 0
-#ifdef DIRECT_PINS
+#if MATRIX_TYPE == DIRECT_SWITCH
 #    undef MATRIX_OUT_PORTS
 #    define MATRIX_OUT_PINS  (0, NO_PIN)
 #endif
@@ -201,10 +203,10 @@ void wait_unselect_done(void) {
 #define _BUILD_INPUT_PORT(index, pname, bit) \
     result |= (buffer[inport_index_##pname] & _BV(bit)) ? 0 : _BV(inpin_index_##index);
 #define BUILD_INPUT_PORT(x) _BUILD_INPUT_PORT x
-LOCAL_FUNC ALWAYS_INLINE matrix_line_width_t build_matrix_line(port_width_t buffer[NUM_OF_INPUT_PORTS]);
+LOCAL_FUNC ALWAYS_INLINE matrix_line_t build_matrix_line(port_width_t buffer[NUM_OF_INPUT_PORTS]);
 LOCAL_FUNC
-matrix_line_width_t build_matrix_line(port_width_t buffer[NUM_OF_INPUT_PORTS]) {
-    matrix_line_width_t result = 0;
+matrix_line_t build_matrix_line(port_width_t buffer[NUM_OF_INPUT_PORTS]) {
+    matrix_line_t result = 0;
     MAP(BUILD_INPUT_PORT, MATRIX_IN_PINS);
     return result;
 }
@@ -213,8 +215,8 @@ matrix_line_width_t build_matrix_line(port_width_t buffer[NUM_OF_INPUT_PORTS]) {
     matrix[(inpin_index_##index)/MATRIX_COLS] \
         |= (buffer[inport_index_##pname] & _BV(bit)) ? 0 : _BV((inpin_index_##index)%MATRIX_COLS);
 #define BUILD_INPUT_PORT_DIRECT(x) _BUILD_INPUT_PORT_DIRECT x
-LOCAL_FUNC ALWAYS_INLINE void build_matrix_direct(port_width_t buffer[NUM_OF_INPUT_PORTS], matrix_row_t matrix[]);
+LOCAL_FUNC ALWAYS_INLINE void build_matrix_direct(port_width_t buffer[NUM_OF_INPUT_PORTS], matrix_line_t matrix[]);
 LOCAL_FUNC
-void build_matrix_direct(port_width_t buffer[NUM_OF_INPUT_PORTS], matrix_row_t matrix[]) {
+void build_matrix_direct(port_width_t buffer[NUM_OF_INPUT_PORTS], matrix_line_t matrix[]) {
     MAP(BUILD_INPUT_PORT_DIRECT, MATRIX_IN_PINS);
 }
