@@ -31,6 +31,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    define MATRIX_OUT_PINS  (0, NO_PIN)
 #endif
 
+#include "cpp_map.h"
+
+#if defined(MATRIX_EXTENSION_74HC157) || defined(MATRIX_EXTENSION_74HC153)
+#   define  MATRIX_EXTANSION "matrix_extension_74hc15x.c"
+#endif
+
+#ifdef MATRIX_EXTANSION
+#    include MATRIX_EXTANSION
+#endif
+
 #ifdef MATRIX_GPIO_NEED_SEPARATE_ATOMIC
 #    ifndef setMatrixInputHigh
 #        define setMatrixInputHigh(dev, port, bit) do { if ((dev) == MCU_GPIO) { setPortBitInputHigh_atomic(port, bit); }} while(0)
@@ -60,7 +70,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    define getMatrixInputMaskBit(dev, bit) (((dev) != NO_DEVICE) ? _BV((bit)&0xF) : 0)
 #endif
 
-#include "cpp_map.h"
+#ifndef init_extension
+#    define init_extension()
+#endif
 
 enum DEVICE_NAME {
     MCU_GPIO,

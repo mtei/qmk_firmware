@@ -92,6 +92,7 @@ void init_all_ports(void) {
     init_input_ports();
     init_output_ports();
     init_inport_mask();
+    init_extension();
 }
 
 LOCAL_FUNC ALWAYS_INLINE void select_line_and_read_input_ports(uint8_t current_line, port_width_t port_buffer[NUM_OF_INPUT_PORTS]);

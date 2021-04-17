@@ -5,6 +5,11 @@
 #define DIODE_ROW2COL 2
 #define DIODE_COL2ROW 3
 
+#ifndef ROW2COL
+#    define COL2ROW 0
+#    define ROW2COL 1
+#endif
+
 #ifdef DIRECT_PINS
 #    define MATRIX_TYPE DIRECT_SWITCH
 #else
