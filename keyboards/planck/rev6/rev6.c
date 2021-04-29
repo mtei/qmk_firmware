@@ -55,8 +55,11 @@ void matrix_init_kb(void) {
 	matrix_init_user();
 }
 
+__attribute__((weak)) void matrix_scan_post_user(void) {}
+
 void matrix_scan_kb(void) {
-	matrix_scan_user();
+    matrix_scan_user();
+    matrix_scan_post_user();
 }
 
 #ifdef DIP_SWITCH_ENABLE

@@ -32,3 +32,5 @@ DIP_SWITCH_ENABLE = yes
 
 LAYOUTS = ortho_4x12 planck_mit
 LAYOUTS_HAS_RGB = no
+
+SRC += test_gpio_input_pin_delay.c
