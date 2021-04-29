@@ -124,106 +124,35 @@ void matrix_scan_post_user(void) {
     testnum = (testnum + 1) % TEST_NUM_MAX;
 }
 
-attr_aligned16 void out_in_0(void) {
-    uint8_t idata;
-    WAIT_EXPANDING_NOP_24(1);
-    Pin_H(); WAIT_EXPANDING_NOP_24(0);
-    idata = Pin_in(); WAIT_EXPANDING_NOP_24(4); Pin_L(); WAIT_EXPANDING_NOP_24(20);
-    writePin(WAIT_TEST_PIN, (idata != 0)); WAIT_EXPANDING_NOP_24(5); Pin_L();
+#define DEF_OUT_IN_x(NUM_NOPS) \
+    attr_aligned16 void out_in_ ## NUM_NOPS(void) { \
+    uint8_t idata; \
+    WAIT_EXPANDING_NOP_24(1); \
+    Pin_H(); WAIT_EXPANDING_NOP_24(NUM_NOPS); \
+    idata = Pin_in(); WAIT_EXPANDING_NOP_24(4); Pin_L(); WAIT_EXPANDING_NOP_24(20); \
+    writePin(WAIT_TEST_PIN, (idata != 0)); WAIT_EXPANDING_NOP_24(5); Pin_L(); \
 }
 
-attr_aligned16 void out_in_1(void) {
-    uint8_t idata;
-    WAIT_EXPANDING_NOP_24(1);
-    Pin_H(); WAIT_EXPANDING_NOP_24(1);
-    idata = Pin_in(); WAIT_EXPANDING_NOP_24(4); Pin_L(); WAIT_EXPANDING_NOP_24(20);
-    writePin(WAIT_TEST_PIN, (idata != 0)); WAIT_EXPANDING_NOP_24(5); Pin_L();
+DEF_OUT_IN_x(0)
+DEF_OUT_IN_x(1)
+DEF_OUT_IN_x(2)
+DEF_OUT_IN_x(3)
+DEF_OUT_IN_x(4)
+DEF_OUT_IN_x(5)
+DEF_OUT_IN_x(6)
+DEF_OUT_IN_x(7)
+DEF_OUT_IN_x(8)
+
+#define DEF_OUT_IN_2_ax(NUM_OFF) \
+    attr_aligned16 void out_in_2_a ## NUM_OFF(void) { \
+    uint8_t idata; \
+    WAIT_EXPANDING_NOP_24(1+NUM_OFF); \
+    Pin_H(); WAIT_EXPANDING_NOP_24(2); \
+    idata = Pin_in(); WAIT_EXPANDING_NOP_24(4); Pin_L(); WAIT_EXPANDING_NOP_24(20); \
+    writePin(WAIT_TEST_PIN, (idata != 0)); WAIT_EXPANDING_NOP_24(5); Pin_L(); \
 }
 
-attr_aligned16 void out_in_2(void) {
-    uint8_t idata;
-    WAIT_EXPANDING_NOP_24(1);
-    Pin_H(); WAIT_EXPANDING_NOP_24(2);
-    idata = Pin_in(); WAIT_EXPANDING_NOP_24(4); Pin_L(); WAIT_EXPANDING_NOP_24(20);
-    writePin(WAIT_TEST_PIN, (idata != 0)); WAIT_EXPANDING_NOP_24(5); Pin_L();
-}
-
-attr_aligned16 void out_in_3(void) {
-    uint8_t idata;
-    WAIT_EXPANDING_NOP_24(1);
-    Pin_H(); WAIT_EXPANDING_NOP_24(3);
-    idata = Pin_in(); WAIT_EXPANDING_NOP_24(4); Pin_L(); WAIT_EXPANDING_NOP_24(20);
-    writePin(WAIT_TEST_PIN, (idata != 0)); WAIT_EXPANDING_NOP_24(5); Pin_L();
-}
-
-attr_aligned16 void out_in_4(void) {
-    uint8_t idata;
-    WAIT_EXPANDING_NOP_24(1);
-    Pin_H(); WAIT_EXPANDING_NOP_24(4);
-    idata = Pin_in(); WAIT_EXPANDING_NOP_24(4); Pin_L(); WAIT_EXPANDING_NOP_24(20);
-    writePin(WAIT_TEST_PIN, (idata != 0)); WAIT_EXPANDING_NOP_24(5); Pin_L();
-}
-
-attr_aligned16 void out_in_5(void) {
-    uint8_t idata;
-    WAIT_EXPANDING_NOP_24(1);
-    Pin_H(); WAIT_EXPANDING_NOP_24(5);
-    idata = Pin_in(); WAIT_EXPANDING_NOP_24(4); Pin_L(); WAIT_EXPANDING_NOP_24(20);
-    writePin(WAIT_TEST_PIN, (idata != 0)); WAIT_EXPANDING_NOP_24(5); Pin_L();
-}
-
-attr_aligned16 void out_in_6(void) {
-    uint8_t idata;
-    WAIT_EXPANDING_NOP_24(1);
-    Pin_H(); WAIT_EXPANDING_NOP_24(6);
-    idata = Pin_in(); WAIT_EXPANDING_NOP_24(4); Pin_L(); WAIT_EXPANDING_NOP_24(20);
-    writePin(WAIT_TEST_PIN, (idata != 0)); WAIT_EXPANDING_NOP_24(5); Pin_L();
-}
-
-attr_aligned16 void out_in_7(void) {
-    uint8_t idata;
-    WAIT_EXPANDING_NOP_24(1);
-    Pin_H(); WAIT_EXPANDING_NOP_24(7);
-    idata = Pin_in(); WAIT_EXPANDING_NOP_24(4); Pin_L(); WAIT_EXPANDING_NOP_24(20);
-    writePin(WAIT_TEST_PIN, (idata != 0)); WAIT_EXPANDING_NOP_24(5); Pin_L();
-}
-
-attr_aligned16 void out_in_8(void) {
-    uint8_t idata;
-    WAIT_EXPANDING_NOP_24(1);
-    Pin_H(); WAIT_EXPANDING_NOP_24(8);
-    idata = Pin_in(); WAIT_EXPANDING_NOP_24(4); Pin_L(); WAIT_EXPANDING_NOP_24(20);
-    writePin(WAIT_TEST_PIN, (idata != 0)); WAIT_EXPANDING_NOP_24(5); Pin_L();
-}
-
-attr_aligned16 void out_in_2_a1(void) {
-    uint8_t idata;
-    WAIT_EXPANDING_NOP_24(1+1);
-    Pin_H(); WAIT_EXPANDING_NOP_24(2);
-    idata = Pin_in(); WAIT_EXPANDING_NOP_24(4); Pin_L(); WAIT_EXPANDING_NOP_24(20);
-    writePin(WAIT_TEST_PIN, (idata != 0)); WAIT_EXPANDING_NOP_24(5); Pin_L();
-}
-
-attr_aligned16 void out_in_2_a2(void) {
-    uint8_t idata;
-    WAIT_EXPANDING_NOP_24(1+2);
-    Pin_H(); WAIT_EXPANDING_NOP_24(2);
-    idata = Pin_in(); WAIT_EXPANDING_NOP_24(4); Pin_L(); WAIT_EXPANDING_NOP_24(20);
-    writePin(WAIT_TEST_PIN, (idata != 0)); WAIT_EXPANDING_NOP_24(5); Pin_L();
-}
-
-attr_aligned16 void out_in_2_a3(void) {
-    uint8_t idata;
-    WAIT_EXPANDING_NOP_24(1+3);
-    Pin_H(); WAIT_EXPANDING_NOP_24(2);
-    idata = Pin_in(); WAIT_EXPANDING_NOP_24(4); Pin_L(); WAIT_EXPANDING_NOP_24(20);
-    writePin(WAIT_TEST_PIN, (idata != 0)); WAIT_EXPANDING_NOP_24(5); Pin_L();
-}
-
-attr_aligned16 void out_in_2_a4(void) {
-    uint8_t idata;
-    WAIT_EXPANDING_NOP_24(1+4);
-    Pin_H(); WAIT_EXPANDING_NOP_24(2);
-    idata = Pin_in(); WAIT_EXPANDING_NOP_24(4); Pin_L(); WAIT_EXPANDING_NOP_24(20);
-    writePin(WAIT_TEST_PIN, (idata != 0)); WAIT_EXPANDING_NOP_24(5); Pin_L();
-}
+DEF_OUT_IN_2_ax(1)
+DEF_OUT_IN_2_ax(2)
+DEF_OUT_IN_2_ax(3)
+DEF_OUT_IN_2_ax(4)
