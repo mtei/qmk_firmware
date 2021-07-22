@@ -33,21 +33,23 @@
 
 #define NUMBER_OF_ENCODERS (sizeof(encoders_pad_a) / sizeof(*encoders_pad_a))
 #ifdef ENCODER_MATRIX
-#    define ENCODER_ROWS (sizeof(encoder_row_pins) / sizeof(*encoder_row_pins))
-#    define ENCODER_COLS (sizeof(encoder_col_pins) / sizeof(*encoder_col_pins))
-#    ifdef ENCODER_ROW_PINS_RIGHT
-#        define SPLIT_MUTABLE_ROW
-#    else
-#        define SPLIT_MUTABLE_ROW const
-#    endif
-#    ifdef ENCODER_COL_PINS_RIGHT
-#        define SPLIT_MUTABLE_COL
-#    else
-#        define SPLIT_MUTABLE_COL const
-#    endif
+#    define NUM_OF_PINS(INITIALIZER) (sizeof((pin_t[]){INITIALIZER}) / sizeof(pin_t))
+#    define ENCODER_ROWS NUM_OF_PINS(ENCODER_ROW_PINS)
+#    define ENCODER_COLS NUM_OF_PINS(ENCODER_COL_PINS)
 
-static SPLIT_MUTABLE_ROW pin_t encoder_row_pins[] = ENCODER_ROW_PINS;
-static SPLIT_MUTABLE_COL pin_t encoder_col_pins[] = ENCODER_COL_PINS;
+static const pin_t encoder_row_pins_all[] = { ENCODER_ROW_PINS
+#    if defined(ENCODER_ROW_PINS_RIGHT)
+                                              , ENCODER_ROW_PINS_RIGHT
+#    endif //ENCODER_ROW_PINS_RIGHT;
+};
+static const pin_t *encoder_row_pins = encoder_row_pins_all;
+
+static const pin_t encoder_col_pins_all[] = { ENCODER_COL_PINS
+#    if defined(ENCODER_COL_PINS_RIGHT)
+                                              , ENCODER_COL_PINS_RIGHT
+#    endif //ENCODER_COL_PINS_RIGHT
+};
+static const pin_t *encoder_col_pins = encoder_col_pins_all;
 
 typedef encoder_pin_pair_t encoder_pad_t;
 
@@ -141,16 +143,10 @@ void encoder_init(void) {
         }
 #    ifdef ENCODER_ENABLE
 #        if defined(ENCODER_ROW_PINS_RIGHT)
-        const pin_t encoder_row_pins_right[] = ENCODER_ROW_PINS_RIGHT;
-        for (size_t i = 0; i < ENCODER_ROWS; ++i) {
-            encoder_row_pins[i] = encoder_row_pins_right[i];
-        }
+        encoder_row_pins += ENCODER_ROWS;
 #        endif
 #        if defined(ENCODER_COL_PINS_RIGHT)
-        const pin_t encoder_col_pins_right[] = ENCODER_COL_PINS_RIGHT;
-        for (size_t i = 0; i < ENCODER_COLS; ++i) {
-            encoder_col_pins[i] = encoder_col_pins_right[i];
-        }
+        encoder_col_pins += ENCODER_COLS;
 #        endif
 #    endif
     }
