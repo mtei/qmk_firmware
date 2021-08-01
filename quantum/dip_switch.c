@@ -20,6 +20,14 @@
 #ifdef SPLIT_KEYBOARD
 #    include "split_common/split_util.h"
 #endif
+#if defined(SPLIT_KEYBOARD) && defined(DIP_SWITCH_PINS_RIGHT)
+#    define ENABLE_DIP_SWITCH_PINS_RIGHT
+#    define IS_LEFT_HAND isLeftHand
+#    define DIP_SWITCH_PAD_RIGHT dip_switch_pad_right
+#else
+#    define IS_LEFT_HAND 1
+#    define DIP_SWITCH_PAD_RIGHT dip_switch_pad
+#endif
 
 // for memcpy
 #include <string.h>
@@ -35,8 +43,9 @@
 #ifdef DIP_SWITCH_PINS
 #    define NUMBER_OF_DIP_SWITCHES (sizeof(dip_switch_pad) / sizeof(pin_t))
 static pin_t dip_switch_pad[] = DIP_SWITCH_PINS;
-#    if defined(SPLIT_KEYBOARD) && defined(DIP_SWITCH_PINS_RIGHT)
+#    ifdef ENABLE_DIP_SWITCH_PINS_RIGHT
 static pin_t dip_switch_pad_right[] = DIP_SWITCH_PINS_RIGHT;
+_Static_assert(sizeof(dip_switch_pad) == sizeof(dip_switch_pad_right), "DIP_SWITCH_PINS and DIP_SWITCH_PINS_RIGHT are inconsistent.");
 #    endif
 #endif
 
@@ -66,15 +75,11 @@ __attribute__((weak)) void dip_switch_update_mask_kb(uint32_t state) { dip_switc
 void dip_switch_init(void) {
 #ifdef DIP_SWITCH_PINS
     for (uint8_t i = 0; i < NUMBER_OF_DIP_SWITCHES; i++) {
-#    if defined(SPLIT_KEYBOARD) && defined(DIP_SWITCH_PINS_RIGHT)
-        if (isLeftHand) {
-#    endif
+        if (IS_LEFT_HAND) {
             setPinInputHigh(dip_switch_pad[i]);
-#    if defined(SPLIT_KEYBOARD) && defined(DIP_SWITCH_PINS_RIGHT)
         } else {
-            setPinInputHigh(dip_switch_pad_right[i]);
+            setPinInputHigh(DIP_SWITCH_PAD_RIGHT[i]);
         }
-#    endif
     }
     dip_switch_read(true);
 #endif
@@ -103,15 +108,11 @@ void dip_switch_read(bool forced) {
 
     for (uint8_t i = 0; i < NUMBER_OF_DIP_SWITCHES; i++) {
 #ifdef DIP_SWITCH_PINS
-#    if defined(SPLIT_KEYBOARD) && defined(DIP_SWITCH_PINS_RIGHT)
-        if (isLeftHand) {
-#    endif
+        if (IS_LEFT_HAND) {
             dip_switch_state[i] = !readPin(dip_switch_pad[i]);
-#    if defined(SPLIT_KEYBOARD) && defined(DIP_SWITCH_PINS_RIGHT)
         } else {
-            dip_switch_state[i] = !readPin(dip_switch_pad_right[i]);
+            dip_switch_state[i] = !readPin(DIP_SWITCH_PAD_RIGHT[i]);
         }
-#    endif
 #endif
 #ifdef DIP_SWITCH_MATRIX_GRID
         dip_switch_state[i] = peek_matrix(dip_switch_pad[i].row, dip_switch_pad[i].col, read_raw);
