@@ -1,10 +1,10 @@
 # amatelus73
 
-![amatelus73](imgur.com image replace me!)
+![amatelus73](https://swanmatch.github.io/amatelus73/images/gallery/swan.jpg)
 
 A short description of the keyboard/project
 
-* Keyboard Maintainer: [swanmatch](https://github.com/yourusername)
+* Keyboard Maintainer: [swanmatch](https://github.com/swanmatch)
 * Hardware Supported: The PCBs, controllers supported
 * Hardware Availability: Links to where you can find this hardware
 
