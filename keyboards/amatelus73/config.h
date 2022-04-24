@@ -69,7 +69,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #define RGB_MATRIX_VAL_STEP 8
     #define RGB_MATRIX_SPD_STEP 8
 
-    #define RGB_MATRIX_FRAMEBUFFER_EFFECTS
+    #define RGB_MATRIX_FRAMEBUFFER_EFFECTS  // reacts to keyreleases (instead of keypresses)
+// RGB Matrix Animation modes. Explicitly enabled
+// For full list of effects, see:
+// https://docs.qmk.fm/#/feature_rgb_matrix?id=rgb-matrix-effects
+    #define ENABLE_RGB_MATRIX_TYPING_HEATMAP
 
     #define RGB_MATRIX_KEYPRESSES  // reacts to keypresses
 
