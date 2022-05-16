@@ -35,6 +35,9 @@ ifneq ($(strip $(HELIX)),)
     ifneq ($(filter noenc no-enc no_enc,$(strip $1)),)
         ENCODER_ENABLE = no
     endif
+    ifneq ($(filter enc-debug,$(strip $1)),)
+        ENCODER_ENABLE = debug
+    endif
     ifeq ($(strip $1),oled)
         OLED_ENABLE = yes
     endif
@@ -89,4 +92,13 @@ endif
 
 ifeq ($(strip $(DEBUG_CONFIG)), yes)
     OPT_DEFS += -DDEBUG_CONFIG
+endif
+
+ifneq ($(strip $(ENCODER_ENABLE)),no)
+    SRC += encoder_update_user.c
+    ifeq ($(strip $(ENCODER_ENABLE)),debug)
+        ENCODER_ENABLE = yes
+        RGBLIGHT_ENABLE = no
+        SRC += avr_uart_tx.c
+    endif
 endif

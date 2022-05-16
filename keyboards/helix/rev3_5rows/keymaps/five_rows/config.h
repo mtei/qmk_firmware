@@ -22,6 +22,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CONFIG_USER_H
 #define CONFIG_USER_H
 
+#ifndef __ASSEMBLER__
+__attribute__((weak)) void send_avr_uart_tx(uint8_t data);
+__attribute__((weak)) void init_avr_uart_tx(uint16_t data);
+#define DEBUG_LOG(x)      if (send_avr_uart_tx != NULL) { send_avr_uart_tx(x); }
+#define DEBUG_LOG_INIT(x) if (init_avr_uart_tx != NULL) { init_avr_uart_tx(x); }
+#endif
+
 #undef TAPPING_TERM
 #define TAPPING_TERM 300
 #define PERMISSIVE_HOLD
