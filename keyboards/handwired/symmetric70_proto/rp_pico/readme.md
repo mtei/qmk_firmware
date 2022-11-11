@@ -5,7 +5,7 @@
 A compact 70keys keyboard (prototype) designed by mtei
 
 * Keyboard Maintainer: [mtei](https://github.com/mtei)
-* Hardware Supported: Proton C (STM32F303CCT6)
+* Hardware Supported: Raspberry Pi Pico
 * Hardware Availability: This is just prototype
 
 Make example for this keyboard (after setting up your build environment):
