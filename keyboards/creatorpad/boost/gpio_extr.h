@@ -10,7 +10,7 @@
 #    endif
 #endif
 
-typedef uint16_t port_data_t;
+typedef uint32_t port_data_t;
 
 #define readPort(pin) palReadPort(PAL_PORT(pin))
 
