@@ -74,23 +74,39 @@ The matrix_extension_74hc157.c in this directory provides `matrix_read_cols_on_r
  - `make MTEST=matrix_debug_scan,matrix_debug_delay handwired/symmetric70_proto/proton_c/normal:default:flash`
 
 <img width="80%" alt="sym70_proton_c_normal" src="https://user-images.githubusercontent.com/2170248/201057666-c80db142-0924-433e-836b-7c658ca25e28.png">
+<img width="80%" alt="sym70_oc_di_proton_c_normal_10k" src="https://user-images.githubusercontent.com/2170248/203856220-c408b005-1dd2-4b96-b233-5dba849afd83.png">
 
 #### Default setting (with fast `matrix_read_cols_on_rows()`)
  - `make MTEST=matrix_debug_scan,matrix_debug_delay handwired/symmetric70_proto/proton_c/boost:default:flash`
 
 <img width="80%" alt="sym70_proton_c_boost" src="https://user-images.githubusercontent.com/2170248/201057777-1775adbf-1bbd-49ca-a156-f7b6bf956b54.png">
+<img width="80%" alt="sym70_oc_di_proton_c_boost_10k" src="https://user-images.githubusercontent.com/2170248/203856256-30da3e66-a51f-45e7-ada8-e91658b54be0.png">
 
 ##### Press R0C5, R1C5, R2C5, R3C5, R4C5 keys
 
 <img width="80%" alt="sym70_proton_c_boost_C5" src="https://user-images.githubusercontent.com/2170248/201057876-697be08c-9e47-4325-b9d3-4058f5a4c75f.png">
+<img width="80%" alt="sym70_oc_di_proton_c_boost_10k_zoom2_C5" src="https://user-images.githubusercontent.com/2170248/203856457-2469b3e2-9c52-497a-a5bb-4069bfe29728.png">
 
 ##### Connect a 500pF capacitor between C5 line and GND, Press R0C5, R1C5, R2C5, R3C5, R4C5 keys
 
 <img width="80%" alt="sym70_proton_c_boost_C5_500p_re" src="https://user-images.githubusercontent.com/2170248/201057980-4ef7d52a-6b5b-451f-8026-a3e7f3495723.png">
+<img width="80%" alt="sym70_oc_di_proton_c_boost_10k_zoom2_C5_500pf" src="https://user-images.githubusercontent.com/2170248/203856491-bcbe78be-f87c-4583-83a4-45e82cd39b89.png">
 
  ##### Connect a 1000pF capacitor between C5 line and GND, Press R0C5, R1C5, R2C5, R3C5, R4C5 keys
 
 <img width="80%" alt="sym70_proton_c_boost_C5_1000p" src="https://user-images.githubusercontent.com/2170248/201058046-ceee2a34-ef91-4277-968a-9c40dd198230.png">
+<img width="80%" alt="sym70_oc_di_proton_c_boost_10k_zoom2_C5_1000pf" src="https://user-images.githubusercontent.com/2170248/203856536-e7b90f59-2bb0-4131-ad2c-03e56d1376ae.png">
+
+### Raspberry Pi Pico (RP2040)
+#### Default setting (without fast `matrix_read_cols_on_rows()`)
+ - `make MTEST=matrix_debug_scan,matrix_debug_delay handwired/symmetric70_proto/rp_pico/normal:default:flash`
+
+<img width="80%" alt="sym70_oc_di_rp_pico_normal_10k" src="https://user-images.githubusercontent.com/2170248/203856051-1a9642ad-9659-4e35-92e5-5c5fe1ee2df1.png">
+
+#### Default setting (with fast `matrix_read_cols_on_rows()`)
+ - `make MTEST=matrix_debug_scan,matrix_debug_delay handwired/symmetric70_proto/pr_pico/boost:default:flash`
+
+<img width="80%" alt="sym70_oc_di_rp_pico_boost_10k_2" src="https://user-images.githubusercontent.com/2170248/203856186-46c1e344-4fba-4bb7-9541-16fa17d4c940.png">
 
 ## A quick explanation of the code in the fast `matrix_read_cols_on_row.c`
 
