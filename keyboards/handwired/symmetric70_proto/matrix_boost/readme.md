@@ -17,7 +17,7 @@ The matrix_extension_74hc157.c in this directory provides `matrix_read_cols_on_r
 
 | MCU               | execution time of `matrix_scan()` | matrix scan rate |
 |-------------------|---------------|----------------|
-| Pro Micro (16MHz) | 588.5 us      | 1612 scans/sec (620us) |
+| Pro Micro (16MHz) | 581 us        | 1631 scans/sec (613us) |
 | Proton C (72MHz)  | 253.9 us      | 3793 scans/sec (263.6us) |
 | Raspberry Pi Pico | 181.38 us     | 5262 scans/sec (190us) |
 
@@ -27,7 +27,7 @@ The matrix_extension_74hc157.c in this directory provides `matrix_read_cols_on_r
 
 | MCU               | execution time of `matrix_scan()` | matrix scan rate |
 |-------------------|---------------|----------------|
-| Pro Micro (16MHz) | 92 us         |  8064 scans/sec (124us)  |
+| Pro Micro (16MHz) | 90.75 us      |  8147 scans/sec (122.75us)  |
 | Proton C (72MHz)  | 56.94 us      | 15024 scans/sec (66.56us)|
 | Raspberry Pi Pico | 30.03 us      | 26116 scans/sec (38.29us)|
 
@@ -64,14 +64,12 @@ The matrix_extension_74hc157.c in this directory provides `matrix_read_cols_on_r
 #### Default setting (without fast `matrix_read_cols_on_rows()`)
  - `make MTEST=matrix_debug_scan,matrix_debug_delay handwired/symmetric70_proto/promicro/normal:default:flash`
 
-<img width="80%" alt="sym70_promicro_normal" src="https://user-images.githubusercontent.com/2170248/201068411-7159393b-25ad-4c07-8893-25873f09ccc4.png">
 <img width="80%" alt="sym70_oc_di_promicro_normal" src="https://user-images.githubusercontent.com/2170248/203866894-7d684eb9-ae8e-405e-a4ca-3d8c99139107.png">
 
 
 #### Default setting (with fast `matrix_read_cols_on_rows()`)
  - `make MTEST=matrix_debug_scan,matrix_debug_delay handwired/symmetric70_proto/promicro/boost:default:flash`
 
-<img width="80%" alt="sym70_promicro_boost" src="https://user-images.githubusercontent.com/2170248/201068474-6878803b-82a3-48fe-b0ba-5837df78328e.png">
 <img width="80%" alt="sym70_oc_di_promicro_boost" src="https://user-images.githubusercontent.com/2170248/203866931-28d079fc-152d-4e8d-9600-17f7b0350f62.png">
 <img width="80%" alt="sym70_oc_di_promicro_boost_zoom" src="https://user-images.githubusercontent.com/2170248/203866959-c4e43b78-bde2-4e36-85d3-089b2d1414e8.png">
 
