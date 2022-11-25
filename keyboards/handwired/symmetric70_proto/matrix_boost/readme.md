@@ -15,21 +15,21 @@ The matrix_extension_74hc157.c in this directory provides `matrix_read_cols_on_r
 
 * Measurement with QMK 0.18.0
 
-| MCU               | execution time of `matrix_scan()` | matrix scan rate |
-|-------------------|---------------|----------------|
-| Pro Micro (16MHz) | 581 us        | 1631 scans/sec (613us) |
-| Proton C (72MHz)  | 253.9 us      | 3793 scans/sec (263.6us) |
-| Raspberry Pi Pico | 181.38 us     | 5262 scans/sec (190us) |
+| MCU                        | execution time of `matrix_scan()` | matrix scan rate |
+|----------------------------|---------------|--------------------------|
+| Pro Micro (16MHz)          | 581 us        | 1631 scans/sec (613us)   |
+| Proton C (72MHz)           | 253.9 us      | 3793 scans/sec (263.6us) |
+| Raspberry Pi Pico (125MHz) | 181.38 us     | 5262 scans/sec (190us)   |
 
 ### With fast `matrix_read_cols_on_rows() in users/mtei/`
 
 * Measurement with QMK 0.18.0
 
-| MCU               | execution time of `matrix_scan()` | matrix scan rate |
-|-------------------|---------------|----------------|
-| Pro Micro (16MHz) | 90.75 us      |  8147 scans/sec (122.75us)  |
-| Proton C (72MHz)  | 56.94 us      | 15024 scans/sec (66.56us)|
-| Raspberry Pi Pico | 30.03 us      | 26116 scans/sec (38.29us)|
+| MCU                        | execution time of `matrix_scan()` | matrix scan rate |
+|----------------------------|---------------|---------------------------|
+| Pro Micro (16MHz)          | 90.75 us      |  8147 scans/sec (122.75us)|
+| Proton C (72MHz)           | 56.94 us      | 15024 scans/sec (66.56us) |
+| Raspberry Pi Pico (125MHz) | 30.03 us      | 26116 scans/sec (38.29us) |
 
 ## Configuration
 
@@ -60,7 +60,7 @@ The matrix_extension_74hc157.c in this directory provides `matrix_read_cols_on_r
   * `make MTEST=[<other options>...] handwired/symmetric70_proto/promicro/normal:default:flash`
 
 ## Measurement result
-### Pro Micro (ATmega32u4 16Mhz)
+### Pro Micro (ATmega32u4 16MHz)
 #### Default setting (without fast `matrix_read_cols_on_rows()`)
  - `make MTEST=matrix_debug_scan,matrix_debug_delay handwired/symmetric70_proto/promicro/normal:default:flash`
 
@@ -96,7 +96,7 @@ The matrix_extension_74hc157.c in this directory provides `matrix_read_cols_on_r
 
 <img width="80%" alt="sym70_oc_di_proton_c_boost_10k_zoom2_C5_1000pf" src="https://user-images.githubusercontent.com/2170248/203856536-e7b90f59-2bb0-4131-ad2c-03e56d1376ae.png">
 
-### Raspberry Pi Pico (RP2040)
+### Raspberry Pi Pico (RP2040 125MHz)
 #### Default setting (without fast `matrix_read_cols_on_rows()`)
  - `make MTEST=matrix_debug_scan,matrix_debug_delay handwired/symmetric70_proto/rp_pico/normal:default:flash`
 
@@ -105,7 +105,7 @@ The matrix_extension_74hc157.c in this directory provides `matrix_read_cols_on_r
 #### Default setting (with fast `matrix_read_cols_on_rows()`)
  - `make MTEST=matrix_debug_scan,matrix_debug_delay handwired/symmetric70_proto/pr_pico/boost:default:flash`
 
-<img width="80%" alt="sym70_oc_di_rp_pico_boost_10k_2" src="https://user-images.githubusercontent.com/2170248/203856186-46c1e344-4fba-4bb7-9541-16fa17d4c940.png">
+<img width="80%" alt="sym70_oc_di_rp_pico_boost_10k_4" src="https://user-images.githubusercontent.com/2170248/204024953-7cbcfb47-053b-4763-b356-40023aa346a5.png">
 
 ## A quick explanation of the code in the fast `matrix_read_cols_on_row.c`
 
