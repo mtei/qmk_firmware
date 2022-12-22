@@ -115,10 +115,8 @@ enum DEVICE_NAME {
 #    include "matrix.h"
 #    include "atomic_util.h"
 #    include "gpio.h"
-#    ifndef readPort
-#        include "gpio_extr.h"
-#    endif
-#    ifndef readPort
+#    include "gpio_extr.h"
+#    if ! (defined(readPort) && defined(setPortBunchInput))
 #        error matrix_read_cols_on_row.c requires readPort() and related macros.
 #    endif
 #    ifdef setPortBunchOutputOpenDrainPullup
@@ -234,6 +232,14 @@ const static port_pin_list_element_t minfo[] = {
     }
 #endif
 };
+
+#ifdef MATRIX_SELECT_IO_DELAY_US
+// To use microsecond delays instead of CPU clock delays,
+// replace the matrix_output_select_delay() function in matrix_common.c with the following function
+void matrix_output_select_delay(void) {
+    wait_us(MATRIX_SELECT_IO_DELAY_US);
+}
+#endif
 
 // clang-format on
 ALWAYS_INLINE
@@ -610,12 +616,12 @@ void matrix_read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row)
     DEBUG_PIN_ON();
     select_output(current_row);
     matrix_output_select_delay();
-    MATRIX_DEBUG_SCAN_END();
+    //MATRIX_DEBUG_SCAN_END();
     read_all_pins(port_buffer);
     unselect_output(current_row);
     DEBUG_PIN_OFF();
     key_pressed = mask_and_adjust_pins(port_buffer);
-    MATRIX_DEBUG_SCAN_START();
+    //MATRIX_DEBUG_SCAN_START();
     if (key_pressed) {
         current_row_value = build_line(port_buffer);
     }
